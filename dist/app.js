@@ -1,25 +1,39 @@
 "use strict";
-var diagonalSum = function (mat) {
-    let answer = 0;
-    let col = 0, row = mat.length - 1;
-    let i = 0;
-    while (col < mat.length || row >= 0) {
-        if (col === row) {
-            answer += mat[col][row];
+var spiralOrder = function (matrix) {
+    const answer = [];
+    const visit = new Set();
+    const m = matrix.length;
+    const n = matrix[0].length;
+    let left = 0;
+    let right = n - 1;
+    let up = 0;
+    let down = m - 1;
+    while (answer.length < m * n) {
+        for (let col = left; col <= right; col++) {
+            answer.push(matrix[up][col]);
         }
-        else {
-            answer += mat[col][col];
-            answer += mat[row][i];
+        for (let row = up + 1; row <= down; row++) {
+            answer.push(matrix[row][right]);
+        }
+        if (up !== down) {
+            for (let col = right - 1; col >= left; col--) {
+                answer.push(matrix[down][col]);
+            }
+        }
+        if (left !== right) {
+            for (let row = down - 1; row > up; row--) {
+                answer.push(matrix[row][left]);
+            }
         }
         ;
-        [col, row, i] = [col + 1, row - 1, i + 1];
+        [left, right, up, down] = [left + 1, right - 1, up + 1, down - 1];
     }
     return answer;
 };
-console.log(diagonalSum([
-    [7, 3, 1, 9],
-    [3, 4, 6, 9],
-    [6, 9, 6, 6],
-    [9, 5, 8, 5],
-]));
+spiralOrder([
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+    [13, 14, 15, 16],
+]);
 //# sourceMappingURL=app.js.map

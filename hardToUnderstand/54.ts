@@ -1,6 +1,13 @@
+/**
+ * @example
+ * Given an m x n matrix, return all elements of the matrix in spiral order.
+ *
+ * @argument {Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]}
+ * @returns {Output: [1,2,3,6,9,8,7,4,5]}
+ */
+
 var spiralOrder = function (matrix: number[][]) {
     const answer: number[] = []
-    const visit = new Set()
 
     const m = matrix.length
     const n = matrix[0].length
@@ -32,9 +39,3 @@ var spiralOrder = function (matrix: number[][]) {
 
     return answer
 }
-spiralOrder([
-    [1, 2, 3, 4],
-    [5, 6, 7, 8],
-    [9, 10, 11, 12],
-    [13, 14, 15, 16],
-])
