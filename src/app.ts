@@ -1,57 +1,29 @@
-enum DIRECTION {
-    LEFT = "LEFT",
-    RIGHT = "RIGHT",
-    UP = "UP",
-    DOWN = "DOWN",
+var mostPoints = function (questions: number[][]) {
+    let maxNum = -Infinity
+
+    for (let i = 0; i < questions.length; i++) {
+        let cur = questions[i][0]
+        let skip = questions[i][1] + i + 1
+
+        for (let j = skip; j < questions.length; j++) {
+            cur += questions[j][0]
+            if (j + questions[j][1] + 1 >= questions.length) {
+                maxNum = Math.max(cur, maxNum)
+                cur = questions[i][0]
+            } else {
+                j += questions[j][1] + 1
+            }
+        }
+        maxNum = Math.max(cur, maxNum)
+    }
+    return maxNum
 }
-
-const generateMatrix = (n: number): number[][] => {
-    if (n === 1) return [[1]]
-
-    const board = Array.from(new Array(n), () => Array(n).fill(-1))
-
-    const nextDir = new Map([
-        [DIRECTION.LEFT, DIRECTION.UP],
-        [DIRECTION.UP, DIRECTION.RIGHT],
-        [DIRECTION.RIGHT, DIRECTION.DOWN],
-        [DIRECTION.DOWN, DIRECTION.LEFT],
+console.log(
+    mostPoints([
+        [1, 1],
+        [2, 2],
+        [3, 3],
+        [4, 4],
+        [5, 5],
     ])
-
-    const nextRC = (r: number, c: number, dir: DIRECTION) => {
-        switch (dir) {
-            case DIRECTION.LEFT:
-                return [r, c - 1]
-            case DIRECTION.RIGHT:
-                return [r, c + 1]
-            case DIRECTION.UP:
-                return [r - 1, c]
-            case DIRECTION.DOWN:
-                return [r + 1, c]
-            default:
-                return [r, c]
-        }
-    }
-
-    const isEmpty = (r: number, c: number) =>
-        r >= 0 && r < n && c >= 0 && c < n && board[r][c] === -1
-
-    const size = n * n
-
-    let r = 0,
-        c = 0,
-        dir = DIRECTION.RIGHT
-    for (let i = 1; i <= size; i++) {
-        board[r][c] = i
-        let [nextR, nextC] = nextRC(r, c, dir)
-
-        if (!isEmpty(nextR, nextC)) {
-            dir = nextDir.get(dir)
-            ;[nextR, nextC] = nextRC(r, c, dir)
-        }
-
-        ;[r, c] = [nextR, nextC]
-    }
-
-    return board
-}
-generateMatrix(3)
+)

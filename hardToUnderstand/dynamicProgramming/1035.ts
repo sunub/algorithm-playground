@@ -10,21 +10,57 @@
  * @returns { Output: 2 }
  */
 
-var maxUncrossedLines = function (nums1, nums2) {
-    nums1 = [-1].concat(nums1)
-    nums2 = [-1].concat(nums2)
+var maxUncrossedLines = function (nums1: number[], nums2: number[]) {
+    const n1 = nums1.length
+    const n2 = nums2.length
+    const dp: number[][] = Array.from({ length: n1 + 1 }, () =>
+        Array.from({ length: n2 + 1 }, () => 0)
+    )
 
-    let [h, w] = [nums1.length, nums2.length]
-    const dp = new Array(h).fill(0).map(() => new Array(w).fill(0))
-
-    for (let y = 1; y < h; y++) {
-        for (let x = 1; x < w; x++) {
-            if (nums1[y] == nums2[x]) {
-                dp[y][x] = dp[y - 1][x - 1] + 1
+    for (let i = 1; i <= n1; i++) {
+        for (let j = 1; j <= n2; j++) {
+            if (nums1[i - 1] === nums2[j - 1]) {
+                dp[i][j] = 1 + dp[i - 1][j - 1]
             } else {
-                dp[y][x] = Math.max(dp[y - 1][x], dp[y][x - 1])
+                dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j])
             }
         }
     }
-    return dp[h - 1][w - 1]
+
+    return dp[n1][n2]
+}
+
+var otherSolution = function (nums1: number[], nums2: number[]) {
+    function solve(
+        i: number,
+        j: number,
+        arr1: number[],
+        arr2: number[],
+        memo: number[][]
+    ): number {
+        if (i <= 0 || j <= 0) {
+            return 0
+        }
+        if (memo[i][j] !== -1) {
+            return memo[i][j]
+        }
+
+        if (nums1[i - 1] === nums2[j - 1]) {
+            memo[i][j] = 1 + solve(i - 1, j - 1, arr1, arr2, memo)
+        } else {
+            memo[i][j] = Math.max(
+                solve(i, j - 1, arr1, arr2, memo),
+                solve(i - 1, j, arr1, arr2, memo)
+            )
+        }
+
+        return memo[i][j]
+    }
+
+    const n1 = nums1.length
+    const n2 = nums2.length
+    const memo = Array.from({ length: n1 + 1 }, () =>
+        Array.from({ length: n2 + 1 }, () => -1)
+    )
+    return solve(n1, n2, nums1, nums2, memo)
 }
