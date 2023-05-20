@@ -1,32 +1,58 @@
-var isBipartite = function (graph: number[][]) {
-    const color = new Map()
-    const stack: number[] = []
+var calcEquation = function (
+    equations: string[][],
+    values: number[],
+    queries: string[][]
+) {
+    const map = new Map()
 
-    for (let i = 0; i < graph.length; i++) {
-        if (color.has(i)) continue
+    let i = 0
+    for (const factor of equations) {
+        const value = values[i]
+        const underDot = String(value).indexOf(".")
+        const multiple =
+            underDot === -1
+                ? 10
+                : Math.pow(10, String(value).slice(underDot + 1).length)
 
-        color.set(i, true)
-        stack.push(i)
-
-        while (stack.length) {
-            const curr = stack.shift()!
-            for (const neighbor of graph[curr]) {
-                if (!color.has(neighbor)) {
-                    stack.push(neighbor)
-                    color.set(neighbor, !color.get(curr))
-                } else if (color.get(curr) === color.get(neighbor)) {
-                    return false
-                }
-            }
+        if (!map.has(factor[0])) {
+            let v1 = map.has(factor[1])
+                ? map.get(factor[1]) * value
+                : value * multiple
+            map.set(factor[0], v1)
+        }
+        if (!map.has(factor[1])) {
+            let v2 = map.has(factor[0]) ? map.get(factor[0]) / value : multiple
+            map.set(factor[1], v2)
         }
     }
 
-    return true
+    const answer: number[] = []
+    for (const query of queries) {
+        if (!map.has(query[0]) || !map.has(query[1])) {
+            answer.push(-1)
+            continue
+        }
+        const result = map.get(query[0]) / map.get(query[1])
+        answer.push(result)
+    }
+    return answer
 }
 
-isBipartite([
-    [1, 3],
-    [0, 2],
-    [1, 3],
-    [0, 2],
-])
+calcEquation(
+    [
+        ["a", "b"],
+        ["b", "c"],
+    ],
+    [2.0, 3.0],
+    [
+        ["a", "c"],
+        ["b", "a"],
+        ["a", "e"],
+        ["a", "a"],
+        ["x", "x"],
+    ]
+)
+
+const a = 1.0
+const b = String(a).indexOf(".")
+console.log(b)
