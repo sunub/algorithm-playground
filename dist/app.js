@@ -1,61 +1,42 @@
 "use strict";
-var calcEquation = function (equations, values, queries) {
-    const adj = new Map();
-    for (const factor of equations) {
-        adj.set(factor[0], []);
-        adj.set(factor[1], []);
-    }
-    for (const factor of equations) {
-        const u = factor[0];
-        const v = factor[1];
-        const weight = values.shift();
-        adj.get(u).push([v, weight]);
-        adj.get(v).push([u, 1 / weight]);
-    }
-    const res = [];
-    for (const query of queries) {
-        const u = query[0];
-        const v = query[1];
-        const value = dfs(u, v, new Set());
-        if (!value) {
-            res.push(-1);
-        }
-        else {
-            res.push(value);
-        }
-    }
-    function dfs(start, end, seen) {
-        if (!adj.has(start) || !adj.has(end)) {
-            return false;
-        }
-        if (start === end) {
-            return 1;
-        }
-        seen.add(start);
-        const neighbors = adj.get(start);
-        for (const neighbor of neighbors) {
-            if (seen.has(neighbor)) {
-                continue;
+var shortestBridge = function (grid) {
+    const length = grid.length;
+    let minCount = Infinity;
+    const queue = [];
+    const map = new Map();
+    let island = 1;
+    for (let i = 0; i < length; i++) {
+        for (let j = 0; j < length; j++) {
+            if (grid[i][j] === 1) {
+                let key = `island${island}`;
+                map.set(key, dfs(i, j, []));
+                island += 1;
             }
-            const val = dfs(neighbor, end, seen);
-            if (val !== false)
-                return val;
         }
-        return false;
     }
-    return res;
+    return minCount;
+    function dfs(col, row, queue) {
+        if (col < 0 ||
+            col + 1 > length ||
+            row < 0 ||
+            row + 1 > length ||
+            grid[col][row] !== 1) {
+            return queue;
+        }
+        grid[col][row] = -1;
+        queue.push([col, row]);
+        dfs(col + 1, row, queue);
+        dfs(col - 1, row, queue);
+        dfs(col, row + 1, queue);
+        dfs(col, row - 1, queue);
+        return queue;
+    }
 };
-calcEquation([
-    ["a", "b"],
-    ["b", "c"],
-], [2.0, 3.0], [
-    ["a", "c"],
-    ["b", "a"],
-    ["a", "e"],
-    ["a", "a"],
-    ["x", "x"],
-]);
-const a = 1.0;
-const b = String(a).indexOf(".");
-console.log(b);
+console.log(shortestBridge([
+    [1, 1, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0],
+    [0, 0, 0, 1, 1],
+    [0, 0, 0, 1, 1],
+]));
 //# sourceMappingURL=app.js.map

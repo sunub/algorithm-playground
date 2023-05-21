@@ -1,0 +1,48 @@
+@import "./navigation.css";
+@import "./dropdownMenu.css";
+@import "./search.css";
+@import "./cluster.css";
+@import "./booknavbar.css";
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 4rem;
+  padding: 0 clamp(1.375rem, 1.2rem + 0.89vw, 2rem);
+  line-height: 1.5rem;
+  background: var(--surface-header);
+  position: sticky;
+
+  container: site_header / inline-size;
+}
+
+.site-header,
+.cluster {
+  flex-wrap: nowrap;
+}
+
+.btn_container {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-8);
+}
+
+#brid-main-icon {
+  display: flex;
+  position: absolute;
+  column-gap: 8px;
+  left: calc(50dvw - 68px);
+  top: 40px;
+
+  & > #cloud {
+    position: relative;
+    top: -0.1rem;
+  }
+
+  & > #large_cloud {
+    position: relative;
+    top: -1rem;
+    left: 10px;
+  }
+}
