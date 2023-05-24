@@ -10,74 +10,79 @@ function maxScore(nums1: number[], nums2: number[], k: number): number {
     }
     pairs.sort((a, b) => b[1] - a[1])
 
-    let topKsum = 0
-    let topKHeap = new MaxHeap()
+    let topKSum = 0
+    let topKHeap = new MinHeap()
     for (let i = 0; i < k; i++) {
-        topKsum += pairs[i][0]
-        topKHeap.add(pairs[i][0])
+        topKSum += pairs[i][0]
+        topKHeap.insert(pairs[i][0])
     }
 
-    let answer = topKsum * pairs[k - 1][1]
-
+    let answer = topKSum * pairs[k - 1][1]
     for (let i = k; i < n; i++) {
-        topKsum += pairs[i][0] - topKHeap.get()
-        topKHeap.add(pairs[i][0])
+        topKSum += pairs[i][0] - topKHeap.extractMin()
+        topKHeap.insert(pairs[i][0])
 
-        answer = Math.max(answer, topKsum * pairs[i][1])
+        answer = Math.max(answer, topKSum * pairs[i][1])
     }
-
     return answer
 }
 
-class MaxHeap {
+class MinHeap {
     root: number[]
     constructor() {
         this.root = []
+        this.bubbleUp(this.root.length - 1)
     }
 
-    add(val: number) {
+    insert(val: number) {
         this.root.push(val)
-        if (this.root.length > 2) {
-            this.sort()
-        } else {
-            this.root.sort((a, b) => b - a)
+        this.bubbleUp(this.root.length - 1)
+    }
+
+    bubbleUp(index: number) {
+        while (index > 0) {
+            let parent = Math.floor((index + 1) / 2) - 1
+            if (this.root[parent] > this.root[index]) {
+                let temp = this.root[parent]
+                this.root[parent] = this.root[index]
+                this.root[index] = temp
+            }
+            index = parent
         }
     }
 
-    get(): number {
-        return this.root.shift()!
+    extractMin() {
+        var min = this.root[0]
+        this.root[0] = this.root.pop()!
+        this.bubbleDown(0)
+        return min
     }
 
-    sort() {
-        const n = this.root.length
-        let i = n - 1
-        while (i >= 0) {
-            const parent = i - 1
-            const left = parent + 1
-            const right = parent + 2
-
-            if (this.root[left] < this.root[right]) {
-                ;[this.root[left], this.root[right]] = [
-                    this.root[right],
-                    this.root[left],
-                ]
+    bubbleDown(index: number) {
+        while (true) {
+            let child = (index + 1) * 2
+            let sibling = child - 1
+            let toSwap = null
+            if (this.root[index] > this.root[child]) {
+                toSwap = child
             }
-            if (this.root[left] > this.root[parent]) {
-                ;[this.root[parent], this.root[left]] = [
-                    this.root[left],
-                    this.root[parent],
-                ]
+            if (
+                this.root[index] > this.root[sibling] &&
+                (this.root[child] == null ||
+                    (this.root[child] !== null &&
+                        this.root[sibling] < this.root[child]))
+            ) {
+                toSwap = sibling
             }
-
-            i -= 2
+            if (toSwap == null) {
+                break
+            }
+            let temp = this.root[toSwap]
+            this.root[toSwap] = this.root[index]
+            this.root[index] = temp
+            index = toSwap
         }
     }
 }
 
-console.log(
-    maxScore(
-        [79, 76, 41, 28, 41, 66, 44, 30, 25],
-        [25, 0, 69, 67, 55, 0, 9, 77, 26],
-        7
-    )
-)
+console.log(maxScore([1, 3, 3, 2], [2, 1, 3, 4], 3))
