@@ -1,41 +1,30 @@
 "use strict";
-var areDeeplyEqual = function (o1, o2) {
-    if (typeof o1 !== typeof o2) {
-        return false;
+function maxScore(nums1, nums2, k) {
+    const max = backTracking(0, k, [], nums1, "max", []);
+    const min = backTracking(0, k, [], nums2, "min", []);
+    const n = max.length;
+    let answer = -Infinity;
+    for (let i = 0; i < n; i++) {
+        answer = Math.max(answer, max[i] * min[i]);
     }
-    if (Array.isArray(o1) !== Array.isArray(o2)) {
-        return false;
-    }
-    if (o1 instanceof Object && !Array.isArray(o1)) {
-        return search(o1, o2);
-    }
-    if (o1 instanceof Array && o2 instanceof Array) {
-        return JSON.stringify(o1) === JSON.stringify(o2)
-            ? true
-            : areDeeplyEqual(o1.shift(), o2.shift());
-    }
-    return JSON.stringify(o1) === JSON.stringify(o2) ? true : false;
-};
-function search(ob1, ob2) {
-    let o1Keys = Object.keys(ob1);
-    let o2Keys = Object.keys(ob2);
-    for (let i = 0; i < o1Keys.length; i++) {
-        if (o2Keys.includes(o1Keys[i])) {
-            const key1 = o1Keys[i];
-            const val1 = ob1[key1];
-            const val2 = ob2[key1];
-            if (val1 instanceof Object && val2 instanceof Object) {
-                return search(val1, val2);
-            }
-            else if (val1 !== val2) {
-                return false;
-            }
-        }
-        else {
-            return false;
-        }
-    }
-    return true;
+    return answer;
 }
-areDeeplyEqual([1], [1, 2]);
+function backTracking(start, target, temp, nums, status, result) {
+    if (temp.length === target) {
+        if (status === "max") {
+            result.push(temp.reduce((acc, cur) => acc + cur));
+        }
+        else if (status === "min") {
+            result.push(Math.min(...temp));
+        }
+        return result;
+    }
+    for (let i = start; i < nums.length; i++) {
+        temp.push(nums[i]);
+        backTracking(i + 1, target, temp, nums, status, result);
+        temp.pop();
+    }
+    return result;
+}
+console.log(maxScore([79, 76, 41, 28, 41, 66, 44, 30, 25], [25, 0, 69, 67, 55, 0, 9, 77, 26], 7));
 //# sourceMappingURL=app.js.map
