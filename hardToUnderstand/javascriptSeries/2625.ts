@@ -13,41 +13,58 @@
  * @returns { Output : [1, 2, 3, [4, 5, 6], [7, 8, [9, 10, 11], 12], [13, 14, 15]] }
  */
 
-var flat = function (arr, n) {
-    const result: number[][] = []
-    if (n > 0) {
-        depthSearch([...arr], 0)
-    } else {
-        return arr
-    }
+type MultiDimensionalArray = (number | MultiDimensionalArray)[]
 
-    function depthSearch(copy: number[][], depth: number) {
-        for (const array of copy) {
-            let curDepth = depth
-            if (curDepth >= n) {
-                result.push(array)
+var flat = function (
+    arr: MultiDimensionalArray,
+    n: number
+): MultiDimensionalArray {
+    const res: MultiDimensionalArray = []
+
+    const flattening = (nums: MultiDimensionalArray, depth: number) => {
+        for (const num of nums) {
+            if (Array.isArray(num) && depth > 0 && n - depth > 0) {
+                flattening(num, depth - 1)
             } else {
-                if (Array.isArray(array)) {
-                    curDepth += 1
-                    while (array.length) {
-                        let cur: any = array.shift()
-                        if (curDepth >= n) {
-                            result.push(cur)
-                        } else {
-                            if (Array.isArray(cur)) {
-                                depthSearch(cur, curDepth + 1)
-                            } else {
-                                result.push(cur)
-                            }
-                        }
-                    }
-                } else {
-                    result.push(array)
-                }
+                res.push(num)
             }
         }
-        return
     }
 
-    return result
+    flattening(arr, n)
+    return res
 }
+
+var flat = function (arr: MultiDimensionalArray, n: number) {
+    let nestedArrayElement = true
+    let queue: MultiDimensionalArray
+    let depth = 0
+
+    while (nestedArrayElement && depth < n) {
+        nestedArrayElement = false
+        queue = []
+
+        for (let i = 0; i < arr.length; i++) {
+            if (Array.isArray(arr[i])) {
+                queue.push(...(arr[i] as MultiDimensionalArray))
+                nestedArrayElement = true
+            } else {
+                queue.push(arr[i])
+            }
+        }
+        arr = [...queue]
+        depth++
+    }
+
+    return arr
+}
+
+// Explain the concept of flattening a multi-dimensional array. Why might flattening be useful in certain scenarios?
+
+// Flattening a multi-dimensional array means converting it into a single-dimensional array by removing any nested arrays and replacing them with their actual elements. This can be useful when we need to process or analyze the array as a flat list, disregarding its original nested structure. It simplifies operations such as searching, filtering, or transforming the elements of the array.
+// Are there any edge cases or special scenarios that need to be considered when solving this problem? How does your solution handle them?
+
+// Yes, we should consider edge cases such as empty arrays or arrays with no nested arrays. In such cases, the function should return the original array as there are no nested arrays to flatten. Additionally, we need to handle scenarios where the depth n is negative or exceeds the actual depth of the array. In these cases, the function should also return the original array without flattening.
+// How does your solution handle circular references or self-referencing arrays within the input array?
+
+// Circular references or self-referencing arrays can lead to infinite recursion. The provided solution does not explicitly handle circular references. If the input array contains circular references, the recursive flattening process may result in an infinite loop or stack overflow error.

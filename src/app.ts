@@ -1,29 +1,27 @@
-var flat = function (arr: number[], n: number) {
-    if (!n) return arr
+type MultiDimensionalArray = (number | MultiDimensionalArray)[]
 
-    let result = arr
-    for (let i = 0; i < n; i++) {
-        flatByOne(result)
-    }
+var flat = function (arr: MultiDimensionalArray, n: number) {
+    let nestedArrayElement = true
+    let queue: MultiDimensionalArray
+    let depth = 0
 
-    function flatByOne(arr: number[][]) {
-        let subresult = []
-        let i = 0,
-            len = arr.length
-        while (i < len) {
-            if (typeof arr[i] === "object") {
-                let j = 0,
-                    sublen = arr[i].length
-                while (j < sublen) {
-                    subresult.push(arr[i][j])
-                    j++
-                }
-            } else subresult.push(arr[i])
-            i++
+    while (nestedArrayElement && depth < n) {
+        nestedArrayElement = false
+        queue = []
+
+        for (let i = 0; i < arr.length; i++) {
+            if (Array.isArray(arr[i])) {
+                queue.push(...(arr[i] as MultiDimensionalArray))
+                nestedArrayElement = true
+            } else {
+                queue.push(arr[i])
+            }
         }
-        result = [...subresult]
+        arr = [...queue]
+        depth++
     }
-    return result
+
+    return arr
 }
 
 console.log(flat([1, 2, [3, [4, [5, [6]]]]], 2))
