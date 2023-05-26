@@ -1,52 +1,39 @@
 "use strict";
-function maxScore(nums1, nums2, k) {
-    const n = nums1.length;
-    const pairs = Array.from({ length: n }, (v, _) => (v = Array.from({ length: 2 }, (v, _) => (v = 0))));
-    for (let i = 0; i < n; i++) {
-        pairs[i] = [nums1[i], nums2[i]];
+var flat = function (arr, n) {
+    const result = [];
+    if (n > 0) {
+        depthSearch([...arr], 0);
     }
-    pairs.sort((a, b) => b[1] - a[1]);
-    console.log(pairs);
-}
-class MinHeap {
-    constructor() {
-        this.root = [];
+    else {
+        return arr;
     }
-    add(val) {
-        this.root.push(val);
-        if (this.root.length > 2) {
-            this.sort();
+    function depthSearch(copy, depth) {
+        if (depth >= n) {
+            return result.push(copy);
         }
-        else {
-            this.root.sort((a, b) => a - b);
-        }
-    }
-    sort() {
-        const n = this.root.length;
-        let i = n - 1;
-        while (i >= 0) {
-            const parent = i - 1;
-            const left = parent + 1;
-            const right = parent + 2;
-            if (this.root[left] > this.root[right]) {
-                this.swap(left, right);
+        for (const array of copy) {
+            if (Array.isArray(array)) {
+                depthSearch(array.shift(), depth + 1);
+                // while (array.length) {
+                //     let cur = array.shift()
+                //     if (curDepth >= n) {
+                //         result.push(cur)
+                //     } else {
+                //         if (Array.isArray(cur)) {
+                //             depthSearch(cur, curDepth + 1)
+                //         } else {
+                //             result.push(cur)
+                //         }
+                //     }
+                // }
             }
-            if (this.root[left] < this.root[parent]) {
-                this.swap(left, parent);
+            else {
+                result.push(array);
             }
-            i -= 2;
         }
+        return;
     }
-    swap(idx1, idx2) {
-        ;
-        [this.root[idx1], this.root[idx2]] = [this.root[idx2], this.root[idx1]];
-    }
-}
-console.log(maxScore([79, 76, 41, 28, 41, 66, 44, 30, 25], [25, 0, 69, 67, 55, 0, 9, 77, 26], 7));
-const a = new MinHeap();
-a.add(10);
-a.add(4);
-a.add(3);
-a.add(11);
-a.add(1);
+    return result;
+};
+console.log(flat([1, 2, [3, [4, [5, [6]]]]], 2));
 //# sourceMappingURL=app.js.map
