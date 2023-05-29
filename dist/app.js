@@ -1,10 +1,23 @@
 "use strict";
-function chunk(arr, size) {
-    const result = [];
-    while (arr.length) {
-        result.push(arr.splice(0, size));
+function* prototypeGenerator(obj) {
+    let currPrototype = Object.getPrototypeOf(obj);
+    while (currPrototype !== null) {
+        yield currPrototype;
+        currPrototype = Object.getPrototypeOf(currPrototype);
     }
-    return result;
 }
-console.log(chunk([1, 9, 6, 3, 2], 3));
+function usingGeneratorFunction(obj, classFunction) {
+    if (obj == null ||
+        obj == undefined ||
+        typeof classFunction !== "function") {
+        return false;
+    }
+    for (const prototype of prototypeGenerator(obj)) {
+        if (prototype === classFunction.prototype) {
+            return true;
+        }
+    }
+    return false;
+}
+console.log(usingGeneratorFunction(0, Object));
 //# sourceMappingURL=app.js.map
