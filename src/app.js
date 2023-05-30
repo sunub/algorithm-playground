@@ -1,5 +1,18 @@
-const a =
-    "110111101100010011000101110110100000011101000101011000000000000000000000000000000000000000000000000"
+const o = {}
+let bValue = 38
 
-console.log(`0b${a}`)
-console.log(parseInt(a, 10))
+Object.defineProperty(o, "b", {
+    enumerable: true,
+    configurable: true,
+    get() {
+        return bValue
+    },
+    set(newValue) {
+        return (bValue = newValue)
+    },
+})
+
+console.log(o.b)
+o.b = 44
+console.log(o.b)
+console.log(bValue)
