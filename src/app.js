@@ -1,18 +1,18 @@
-const o = {}
-let bValue = 38
+// var inorderTraversal = function*(arr) {
+//     if(!arr.length) return arr
 
-Object.defineProperty(o, "b", {
-    enumerable: true,
-    configurable: true,
-    get() {
-        return bValue
-    },
-    set(newValue) {
-        return (bValue = newValue)
-    },
-})
+//     return {
+//         next : () => {
+//             return {
+//                 value :
+//             }
+//         }
+//     }
+// };
 
-console.log(o.b)
-o.b = 44
-console.log(o.b)
-console.log(bValue)
+const arr = [[[6]], [1, 3], []]
+
+for (const a of arr) {
+    let b = a.shift()
+    while (b.length) {}
+}

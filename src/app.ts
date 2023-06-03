@@ -1,49 +1,37 @@
-var shortestPathBinaryMatrix = function (grid: number[][]) {
-    const m = grid[0].length
-    const n = grid.length
-    const visit = new Set()
-    if (grid[0][0] !== 0 || grid[n - 1][n - 1] !== 0) {
-        return -1
+const arr = [[[6], [1, 3, [[[3]]]]], [1, 3], []]
+const res = []
+
+function search(array: any, res: any[]): any {
+    for (const a of array) {
+        if (Array.isArray(a)) search(a, res)
+        else res.push(a)
+    }
+    return res
+}
+
+search(arr, [])
+
+var inorderTraversal = function* (arr: any) {
+    if (!arr.length) return arr
+
+    function search(array: any, res: any[]): any {
+        for (const a of array) {
+            if (Array.isArray(a)) search(a, res)
+            else res.push(a)
+        }
+        return res
     }
 
-    return dfs(0, 0, 0)
+    const b = search(arr, [])
 
-    function dfs(col: number, row: number, count: number) {
-        if (
-            col < 0 ||
-            col + 1 > m ||
-            row < 0 ||
-            row + 1 > n ||
-            grid[col][row] !== 0 ||
-            visit.has(`${col} ${row}`)
-        ) {
-            return count
-        }
-
-        visit.add(`${col} ${row}`)
-
-        let moveDiagonal = Math.max(
-            dfs(col + 1, row + 1, count + 1),
-            dfs(col - 1, row - 1, count + 1),
-            dfs(col + 1, row - 1, count + 1),
-            dfs(col - 1, row + 1, count + 1)
-        )
-
-        let moveStraight = Math.max(
-            dfs(col + 1, row, count + 1),
-            dfs(col - 1, row, count + 1),
-            dfs(col, row + 1, count + 1),
-            dfs(col, row - 1, count + 1)
-        )
-
-        return Math.max(moveDiagonal, moveStraight)
+    while (b.length) {
+        yield b.shift()
     }
 }
 
-console.log(
-    shortestPathBinaryMatrix([
-        [0, 0, 0],
-        [1, 0, 0],
-        [1, 1, 0],
-    ])
-)
+const gen = inorderTraversal([[[6], [1, 3, [[[3]]]]], [1, 3], []])
+console.log(gen.next().value)
+console.log(gen.next().value)
+console.log(gen.next().value)
+console.log(gen.next().value)
+console.log(gen.next().value)
