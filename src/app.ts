@@ -1,37 +1,30 @@
-const arr = [[[6], [1, 3, [[[3]]]]], [1, 3], []]
-const res = []
+function uniquePathsWithObstacles(obstacleGrid: number[][]): number {
+    const m = obstacleGrid.length
+    const n = obstacleGrid[0].length
+    const dp = Array.from(
+        { length: m + 1 },
+        (v, _) => (v = Array.from({ length: n + 1 }, (v, _) => (v = 0)))
+    )
+    const direction = [
+        [1, 0],
+        [0, 1],
+    ]
+    if (obstacleGrid[m - 1][n - 1] === 1 || obstacleGrid[0][0] === 1) return 0
 
-function search(array: any, res: any[]): any {
-    for (const a of array) {
-        if (Array.isArray(a)) search(a, res)
-        else res.push(a)
-    }
-    return res
-}
-
-search(arr, [])
-
-var inorderTraversal = function* (arr: any) {
-    if (!arr.length) return arr
-
-    function search(array: any, res: any[]): any {
-        for (const a of array) {
-            if (Array.isArray(a)) search(a, res)
-            else res.push(a)
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            if (obstacleGrid[i][j] === 0) {
+            }
         }
-        return res
     }
 
-    const b = search(arr, [])
-
-    while (b.length) {
-        yield b.shift()
+    for (const [dx, dy] of direction) {
     }
 }
-
-const gen = inorderTraversal([[[6], [1, 3, [[[3]]]]], [1, 3], []])
-console.log(gen.next().value)
-console.log(gen.next().value)
-console.log(gen.next().value)
-console.log(gen.next().value)
-console.log(gen.next().value)
+console.log(
+    uniquePathsWithObstacles([
+        [0, 0, 0],
+        [0, 1, 0],
+        [0, 0, 0],
+    ])
+)

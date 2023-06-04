@@ -1,34 +1,30 @@
 "use strict";
-const arr = [[[6], [1, 3, [[[3]]]]], [1, 3], []];
-const res = [];
-function search(array, res) {
-    for (const a of array) {
-        if (Array.isArray(a))
-            search(a, res);
-        else
-            res.push(a);
-    }
-    return res;
-}
-search(arr, []);
-var inorderTraversal = function* (arr) {
-    if (!arr.length)
-        return arr;
-    function search(array, res) {
-        for (const a of array) {
-            if (Array.isArray(a))
-                search(a, res);
-            else
-                res.push(a);
+function uniquePathsWithObstacles(obstacleGrid) {
+    const m = obstacleGrid.length;
+    const n = obstacleGrid[0].length;
+    const dp = Array.from({ length: m + 1 }, (v, _) => (v = Array.from({ length: n + 1 }, (v, _) => (v = 0))));
+    const direction = [
+        [1, 0],
+        [0, 1],
+    ];
+    if (obstacleGrid[m - 1][n - 1] === 1 || obstacleGrid[0][0] === 1)
+        return 0;
+    for (let i = 1; i < m + 1; i++) {
+        for (let j = 1; j < n + 1; j++) {
+            if (obstacleGrid[i][j - 1] === 0) {
+                dp[i][j - 1] = dp[i][j] + 1;
+            }
+            if (obstacleGrid[i - 1][j] === 0) {
+                dp[i - 1][j] = dp[i][j] + 1;
+            }
         }
-        return res;
     }
-    const b = search(arr, []);
-    while (b.length) {
-        yield b.shift();
+    for (const [dx, dy] of direction) {
     }
-};
-const gen = inorderTraversal([[[6], [1, 3, [[[3]]]]], [1, 3], []]);
-const vc = gen.next().value;
-const a = 3;
+}
+console.log(uniquePathsWithObstacles([
+    [0, 0, 0],
+    [0, 1, 0],
+    [0, 0, 0],
+]));
 //# sourceMappingURL=app.js.map
