@@ -1,11 +1,12 @@
-var minFlips = function(a: number, b: number, c: number) {
-    const target = c.toString(2)
+function minimumTotal(triangle: number[][]): number {
+    const flatten = triangle.flat(1)
 
-    let arg1 = a.toString(2)
-    let arg2 = b.toString(2)
-
-    for(let i = 0; )
-};
-console.log(
-    minFlips(2, 6, 5)
-)
+    for (let i = flatten.length - 1; i >= 0; i -= 2) {
+        let peak = i - 2
+        flatten[peak] = Math.min(
+            flatten[peak] + flatten[i],
+            flatten[peak] + flatten[i - 1]
+        )
+    }
+}
+console.log(minimumTotal([[2], [3, 4], [6, 5, 7], [4, 1, 8, 3]]))
