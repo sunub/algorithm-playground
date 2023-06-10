@@ -1,11 +1,34 @@
 "use strict";
-function minimumTotal(triangle) {
-    const tmp = [];
-    for (let i = triangle.length - 2; i >= 0; i--) {
-        for (let j = triangle[i].length - 1; j >= 0; j--) {
-            triangle[i][j] = Math.min(triangle[i + 1][j] + triangle[i][j], triangle[i][j] + triangle[i + 1][j + 1]);
+var maxValue = function (n, index, maxSum) {
+    let left = 1, right = maxSum;
+    while (left < right) {
+        let mid = Math.floor((left + right + 1) >> 1);
+        if (getSum(index, mid, n) <= maxSum) {
+            left = mid;
+        }
+        else {
+            right = mid - 1;
         }
     }
-}
-console.log(minimumTotal([[2], [3, 4], [6, 5, 7], [4, 1, 8, 3]]));
+    return left;
+    function getSum(index, value, n) {
+        let count = 0;
+        if (value > index) {
+            count += (value + value - index) * Math.floor((index + 1) / 2);
+        }
+        else {
+            count +=
+                (value + 1) * Math.floor((index + 1) / 2) + index - value + 1;
+        }
+        if (value >= n - index) {
+            count +=
+                (value + value - n + 1 + index) * Math.floor((n - index) / 2);
+        }
+        else {
+            count += (value + 1) * Math.floor(value / 2) + n - index - value;
+        }
+        return count - value;
+    }
+};
+console.log(maxValue(7, 5, 30));
 //# sourceMappingURL=app.js.map
