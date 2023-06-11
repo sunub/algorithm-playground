@@ -1,36 +1,12 @@
-var maxValue = function (n: number, index: number, maxSum: number) {
-    let left = 1,
-        right = maxSum
+const bb: any = {}
+bb["a"] = 3
+bb["b"] = 3
+bb["a"] = 5
 
-    while (left < right) {
-        let mid = Math.floor((left + right + 1) >> 1)
-        if (getSum(index, mid, n) <= maxSum) {
-            left = mid
-        } else {
-            right = mid - 1
-        }
-    }
-
-    return left
-
-    function getSum(index: number, value: number, n: number): number {
-        let count = 0
-        if (value > index) {
-            count += (value + value - index) * Math.floor((index + 1) / 2)
-        } else {
-            count +=
-                (value + 1) * Math.floor((index + 1) / 2) + index - value + 1
-        }
-
-        if (value >= n - index) {
-            count +=
-                (value + value - n + 1 + index) * Math.floor((n - index) / 2)
-        } else {
-            count += (value + 1) * Math.floor(value / 2) + n - index - value
-        }
-
-        return count - value
-    }
-}
-
-console.log(maxValue(7, 5, 30))
+const b = new Map()
+b.set(1, Object.assign({}, bb))
+bb["a"] = 4
+console.log(b)
+console.log(bb)
+const c = BigInt(3)
+console.log(c)
