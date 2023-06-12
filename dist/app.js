@@ -1,23 +1,28 @@
 "use strict";
-var maxValue = function (n, index, maxSum) {
-    let min = Math.floor(maxSum / n);
-    let max = maxSum;
-    const findSum = (num, len) => {
-        if (len < num) {
-            return (len * (num + num - len + 1)) / 2;
-        }
-        return (num * (num + 1)) / 2 + (len - num);
-    };
-    const isWithin = (num) => {
-        const leftSum = findSum(num, index + 1);
-        const rightSum = findSum(num, n - index);
-        return maxSum >= leftSum + rightSum - num;
-    };
-    while (min <= max) {
-        const mid = (min + max) >> 1;
-        isWithin(mid) ? (min = mid + 1) : (max = mid - 1);
+function minFallingPathSum(matrix) {
+    const memo = new Map();
+    const m = matrix.length;
+    const n = matrix[0].length;
+    for (let i = 0; i < n; i++) {
+        dfs(1, i, "", matrix[0][i]);
     }
-    return max;
-};
-console.log(maxValue(7, 5, 30));
+    function dfs(col, row, key, min) {
+        if (col >= m || row >= n) {
+            return min;
+        }
+        if (memo.has(key)) {
+            return memo.get(key);
+        }
+        for (let i = row - 1 >= 0 ? row - 1 : 0; i <= row + 1; i++) {
+            let curKey = `${matrix[col][i]}`;
+            memo.set(key, dfs(col + 1, i, `${key}${curKey}`, min + matrix[col][i]));
+        }
+        return min;
+    }
+}
+console.log(minFallingPathSum([
+    [2, 1, 3],
+    [6, 5, 4],
+    [7, 8, 9],
+]));
 //# sourceMappingURL=app.js.map

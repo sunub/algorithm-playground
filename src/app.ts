@@ -1,12 +1,30 @@
-const bb: any = {}
-bb["a"] = 3
-bb["b"] = 3
-bb["a"] = 5
+function minFallingPathSum(matrix: number[][]): number {
+    const memo = new Map()
+    const m = matrix.length
+    const n = matrix[0].length
 
-const b = new Map()
-b.set(1, Object.assign({}, bb))
-bb["a"] = 4
-console.log(b)
-console.log(bb)
-const c = BigInt(3)
-console.log(c)
+    for (let i = 0; i < n; i++) {
+        dfs(1, i, "", matrix[0][i])
+    }
+
+    function dfs(col: number, row: number, key: string, min: number) {
+        if (col >= m || row >= n) {
+            return min
+        }
+
+        if (memo.has(key)) {
+            return memo.get(key)
+        }
+
+        for (let i = row - 1 >= 0 ? row - 1 : 0; i <= row + 1; i++) {}
+        return min
+    }
+}
+
+console.log(
+    minFallingPathSum([
+        [2, 1, 3],
+        [6, 5, 4],
+        [7, 8, 9],
+    ])
+)
