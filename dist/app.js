@@ -1,28 +1,33 @@
 "use strict";
-function minFallingPathSum(matrix) {
+function equalPairs(grid) {
+    const n = grid.length;
+    let answer = 0;
     const memo = new Map();
-    const m = matrix.length;
-    const n = matrix[0].length;
     for (let i = 0; i < n; i++) {
-        dfs(1, i, "", matrix[0][i]);
+        let rowNum = grid[i].join(" ");
+        for (let j = 0; j < n; j++) {
+            let colNum = getColNum(0, j);
+            if (rowNum === colNum) {
+                answer += 1;
+            }
+        }
     }
-    function dfs(col, row, key, min) {
-        if (col >= m || row >= n) {
-            return min;
+    function getColNum(col, row) {
+        if (memo.has(col)) {
+            return memo.get(col);
         }
-        if (memo.has(key)) {
-            return memo.get(key);
+        let colNum = [];
+        while (col < n) {
+            colNum.push(grid[col + 1][row]);
+            col += 1;
         }
-        for (let i = row - 1 >= 0 ? row - 1 : 0; i <= row + 1; i++) {
-            let curKey = `${matrix[col][i]}`;
-            memo.set(key, dfs(col + 1, i, `${key}${curKey}`, min + matrix[col][i]));
-        }
-        return min;
+        memo.set(col, colNum);
+        return colNum.join(" ");
     }
+    return answer;
 }
-console.log(minFallingPathSum([
-    [2, 1, 3],
-    [6, 5, 4],
-    [7, 8, 9],
+console.log(equalPairs([
+    [11, 1],
+    [1, 11],
 ]));
 //# sourceMappingURL=app.js.map

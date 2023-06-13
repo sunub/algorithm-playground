@@ -1,4 +1,15 @@
-function equalPairs(grid: number[][]): number {
+// 2352. Equal Row and Column Pairs
+
+// Given a 0-indexed n x n integer matrix grid, return the number of pairs (ri, cj) such that row ri and column cj are equal.
+
+// A row and column pair is considered equal if they contain the same elements in the same order (i.e., an equal array).
+
+/**
+ * @argument { Input: grid = [[3,2,1],[1,7,6],[2,7,7]] }
+ * @returns { Output: 1 }
+ */
+
+function mySolution(grid: number[][]): number {
     const n = grid.length
     let answer = 0
     const memo = new Map()
@@ -18,7 +29,7 @@ function equalPairs(grid: number[][]): number {
             return memo.get(col)
         }
 
-        let colNum = []
+        let colNum: number[] = []
         while (col < n) {
             colNum.push(grid[col][row])
             col += 1
@@ -29,10 +40,3 @@ function equalPairs(grid: number[][]): number {
 
     return answer
 }
-
-console.log(
-    equalPairs([
-        [11, 1],
-        [1, 11],
-    ])
-)
