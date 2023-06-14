@@ -14,7 +14,7 @@ function equalPairs(grid: number[][]): number {
         }
         count += myTrie.search(colArray)
     }
-
+    console.log(myTrie.trie.children.get(11)?.children.get(1))
     return count
 }
 
