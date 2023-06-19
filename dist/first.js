@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 function calculateDaysBetweenDates(date1, date2) {
     // your code goes here
     date1 = new Date(date1);

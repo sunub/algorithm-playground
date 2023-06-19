@@ -1,33 +1,35 @@
-const map = new Map()
+var countPaths = function (grid: number[][]) {
+    let mod = Math.pow(10, 9) + 7
+    let result = 0
+    let rows = grid.length,
+        columns = grid[0].length
+    let dp = Array(rows)
+        .fill(null)
+        .map((_) => Array(columns).fill(0))
 
-var numOfWays = function (nums: number[]) {
-    const root = nums.shift()
-
-    let left = nums.splice(0, Math.floor(nums.length / 2))
-    let right = nums
-
-    dfs(left, 2)
-    dfs(right, 2)
-
-    const floors = [...map.keys()]
-    console.log(floors)
-    return floors[floors.length - 1] * 2 - 1
-}
-
-function dfs(nums: number[], floor: number) {
-    if (!nums.length) {
-        return
+    function dfs(r: number, c: number, preVal: number): number {
+        if (r < 0 || r == rows || c < 0 || c == columns || grid[r][c] <= preVal)
+            return 0
+        if (dp[r][c]) return dp[r][c]
+        return (dp[r][c] =
+            (1 +
+                dfs(r + 1, c, grid[r][c]) +
+                dfs(r - 1, c, grid[r][c]) +
+                dfs(r, c + 1, grid[r][c]) +
+                dfs(r, c - 1, grid[r][c])) %
+            mod)
+    }
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < columns; j++) {
+            result += dfs(i, j, -1) % mod
+        }
     }
 
-    map.has(floor)
-        ? map.set(floor, [...map.get(floor), nums.shift()])
-        : map.set(floor, [nums.shift()])
-
-    if (nums.length % 2 === 0 && nums.length !== 0) {
-        dfs(nums, floor + 1)
-        dfs(nums.splice(0), floor + 1)
-    } else {
-        return
-    }
+    return result % mod
 }
-console.log(numOfWays([3, 4, 5, 1, 2]))
+console.log(
+    countPaths([
+        [1, 1],
+        [3, 4],
+    ])
+)
