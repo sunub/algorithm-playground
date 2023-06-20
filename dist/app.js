@@ -1,34 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var countPaths = function (grid) {
-    let mod = Math.pow(10, 9) + 7;
-    let result = 0;
-    let rows = grid.length, columns = grid[0].length;
-    let dp = Array(rows)
-        .fill(null)
-        .map((_) => Array(columns).fill(0));
-    function dfs(r, c, preVal) {
-        if (r < 0 || r == rows || c < 0 || c == columns || grid[r][c] <= preVal)
-            return 0;
-        if (dp[r][c])
-            return dp[r][c];
-        return (dp[r][c] =
-            (1 +
-                dfs(r + 1, c, grid[r][c]) +
-                dfs(r - 1, c, grid[r][c]) +
-                dfs(r, c + 1, grid[r][c]) +
-                dfs(r, c - 1, grid[r][c])) %
-                mod);
-    }
-    for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < columns; j++) {
-            result += dfs(i, j, -1) % mod;
+var getAverages = function (nums, k) {
+    const answer = Array(nums.length).fill(-1);
+    const slidSize = 2 * k + 1;
+    const indexSize = k * 2;
+    let sum = 0;
+    for (let i = 0; i < nums.length; i++) {
+        sum += nums[i];
+        if (i >= indexSize) {
+            answer[i - k] = Math.floor(sum / slidSize);
+            sum -= nums[i - indexSize];
         }
     }
-    return result % mod;
+    return answer;
 };
-console.log(countPaths([
-    [1, 1],
-    [3, 4],
-]));
+console.log(getAverages([7, 4, 3, 9, 1, 8, 5, 2, 6], 3));
 //# sourceMappingURL=app.js.map

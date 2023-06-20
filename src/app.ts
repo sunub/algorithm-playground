@@ -1,35 +1,21 @@
-var countPaths = function (grid: number[][]) {
-    let mod = Math.pow(10, 9) + 7
-    let result = 0
-    let rows = grid.length,
-        columns = grid[0].length
-    let dp = Array(rows)
-        .fill(null)
-        .map((_) => Array(columns).fill(0))
+function getAverages(nums: number[], k: number): number[] {
+    if (k === 0) return nums
 
-    function dfs(r: number, c: number, preVal: number): number {
-        if (r < 0 || r == rows || c < 0 || c == columns || grid[r][c] <= preVal)
-            return 0
-        if (dp[r][c]) return dp[r][c]
-        return (dp[r][c] =
-            (1 +
-                dfs(r + 1, c, grid[r][c]) +
-                dfs(r - 1, c, grid[r][c]) +
-                dfs(r, c + 1, grid[r][c]) +
-                dfs(r, c - 1, grid[r][c])) %
-            mod)
-    }
-    for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < columns; j++) {
-            result += dfs(i, j, -1) % mod
+    if (nums.length < 2 * k + 1)
+        return Array.from({ length: nums.length }, () => -1)
+
+    const ans = Array.from({ length: k }, () => -1)
+
+    for (let i = k; i <= nums.length - k - 1; i++) {
+        let add = 0
+        let count = 0
+        for (let j = i - k; j <= i + k; j++) {
+            add += nums[j]
+            count++
         }
+        ans.push(Math.floor(add / (2 * k + 1)))
     }
 
-    return result % mod
+    return ans.concat(Array.from({ length: k }, () => -1))
 }
-console.log(
-    countPaths([
-        [1, 1],
-        [3, 4],
-    ])
-)
+console.log(getAverages([7, 4, 3, 9, 1, 8, 5, 2, 6], 3))
