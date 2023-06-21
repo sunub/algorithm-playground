@@ -1,10 +1,28 @@
-function minCost(nums: number[], cost: number[]): number {
+// 2448. Minimum Cost to Make Array Equal
+// Hard
+
+// You are given two 0-indexed arrays nums and cost consisting each of n positive integers.
+
+// You can do the following operation any number of times:
+
+// Increase or decrease any element of the array nums by 1.
+// The cost of doing one operation on the ith element is cost[i].
+
+// Return the minimum total cost such that all the elements of the array nums become equal.
+
+/**
+ * @argument { Input: nums = [1,3,5,2], cost = [2,3,1,14] }
+ * @returns { Output: 8 }
+ */
+
+var minCost = function (nums: number[], cost: number[]) {
+    const numsAndCost: number[][] = []
     const n = nums.length
-    const map = new Map()
+
     for (let i = 0; i < n; i++) {
-        map.set(nums[i], cost[i])
+        numsAndCost.push([nums[i], cost[i]])
     }
-    const numsAndCost = [...map.entries()].sort((a, b) => a[0] - b[0])
+    numsAndCost.sort((a, b) => a[0] - b[0])
 
     const prefixSum = Array.from({ length: n }, () => 0)
     prefixSum[0] = numsAndCost[0][1]
@@ -26,4 +44,3 @@ function minCost(nums: number[], cost: number[]): number {
     }
     return answer
 }
-console.log(minCost([1, 3, 5, 2], [2, 3, 1, 14]))

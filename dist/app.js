@@ -1,18 +1,31 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var getAverages = function (nums, k) {
-    const answer = Array(nums.length).fill(-1);
-    const slidSize = 2 * k + 1;
-    const indexSize = k * 2;
-    let sum = 0;
+function minCost(nums, cost) {
+    const dp = Array(nums.length)
+        .fill(0)
+        .map(() => Array.from({ length: nums.length }, () => 0));
+    const map = new Map();
+    let min = Infinity;
     for (let i = 0; i < nums.length; i++) {
-        sum += nums[i];
-        if (i >= indexSize) {
-            answer[i - k] = Math.floor(sum / slidSize);
-            sum -= nums[i - indexSize];
+        let j = 0;
+        let curMin = 0;
+        while (j < nums.length) {
+            let diff = Math.abs(nums[j] - nums[i]);
+            let key = `${nums[j]}, ${diff}`;
+            if (map.has(key)) {
+                curMin += map.get(key);
+            }
+            else {
+                let curCost = dp[i][j] * cost[j];
+                curMin += curCost;
+                map.set(key, curCost);
+            }
+            j += 1;
         }
+        min = Math.min(curMin, min);
     }
-    return answer;
-};
-console.log(getAverages([7, 4, 3, 9, 1, 8, 5, 2, 6], 3));
+    console.log(dp);
+    return min;
+}
+console.log(minCost([1, 3, 5, 2], [2, 3, 1, 14]));
 //# sourceMappingURL=app.js.map
