@@ -1,31 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function minCost(nums, cost) {
-    const dp = Array(nums.length)
-        .fill(0)
-        .map(() => Array.from({ length: nums.length }, () => 0));
-    const map = new Map();
-    let min = Infinity;
-    for (let i = 0; i < nums.length; i++) {
-        let j = 0;
-        let curMin = 0;
-        while (j < nums.length) {
-            let diff = Math.abs(nums[j] - nums[i]);
-            let key = `${nums[j]}, ${diff}`;
-            if (map.has(key)) {
-                curMin += map.get(key);
-            }
-            else {
-                let curCost = dp[i][j] * cost[j];
-                curMin += curCost;
-                map.set(key, curCost);
-            }
-            j += 1;
-        }
-        min = Math.min(curMin, min);
+function maxProfit(prices, fee) {
+    const n = prices.length;
+    const hold = Array.from({ length: n }, () => 0);
+    const free = Array.from({ length: n }, () => 0);
+    hold[0] = -prices[0];
+    for (let i = 1; i < n; i++) {
+        hold[i] = Math.max(hold[i - 1], free[i - 1] - prices[i]);
+        free[i] = Math.max(free[i - 1], hold[i - 1] + prices[i] - fee);
     }
-    console.log(dp);
-    return min;
+    return free[n - 1];
 }
-console.log(minCost([1, 3, 5, 2], [2, 3, 1, 14]));
+console.log(maxProfit([9, 8, 7, 1, 2], 3));
 //# sourceMappingURL=app.js.map
