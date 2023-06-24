@@ -1,15 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function maxProfit(prices, fee) {
-    const n = prices.length;
-    const hold = Array.from({ length: n }, () => 0);
-    const free = Array.from({ length: n }, () => 0);
-    hold[0] = -prices[0];
-    for (let i = 1; i < n; i++) {
-        hold[i] = Math.max(hold[i - 1], free[i - 1] - prices[i]);
-        free[i] = Math.max(free[i - 1], hold[i - 1] + prices[i] - fee);
-    }
-    return free[n - 1];
+function tallestBillboard(rods) {
+    const res = [];
+    const helper = (cur, start) => {
+        res.push([...cur]);
+        for (let i = start; i < rods.length; i++) {
+            cur.push(rods[i]);
+            helper(cur, i + 1);
+            cur.pop();
+        }
+    };
+    helper([], 0);
 }
-console.log(maxProfit([9, 8, 7, 1, 2], 3));
+console.log(tallestBillboard([1, 2, 3, 6]));
 //# sourceMappingURL=app.js.map

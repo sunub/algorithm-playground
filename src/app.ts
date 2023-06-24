@@ -1,14 +1,29 @@
-function maxProfit(prices: number[], fee: number) {
-    const n = prices.length
-    const hold = Array.from({ length: n }, () => 0)
-    const free = Array.from({ length: n }, () => 0)
+function tallestBillboard(rods: number[]) {
+    let dp = new Map().set(0, 0)
 
-    hold[0] = -prices[0]
-    for (let i = 1; i < n; i++) {
-        hold[i] = Math.max(hold[i - 1], free[i - 1] - prices[i])
-        free[i] = Math.max(free[i - 1], hold[i - 1] + prices[i] - fee)
+    for (const r of rods) {
+        const newDp = new Map(dp)
+
+        for (const [diff, taller] of dp.entries()) {
+            let shorter = taller - diff
+
+            let newTaller = newDp.has(diff + r) ? newDp.get(diff + r) : 0
+            newDp.set(diff + r, Math.max(newTaller, taller + r))
+
+            let newDiff = Math.abs(shorter + r - taller)
+            let newTaller2 = Math.max(shorter + r, taller)
+            newDp.set(
+                newDiff,
+                Math.max(
+                    newTaller2,
+                    newDp.has(newDiff) ? newDp.get(newDiff) : 0
+                )
+            )
+        }
+
+        dp = newDp
     }
-    return free[n - 1]
+    return dp.get(0)
 }
 
-console.log(maxProfit([9, 8, 7, 1, 2], 3))
+console.log(tallestBillboard([1, 2, 3, 4, 5, 6]))
