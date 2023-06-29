@@ -43,15 +43,34 @@ function maxProbability(
     start: number,
     end: number
 ): number {
-    let map = {}
+    const graph = new Map()
     for (let i = 0; i < edges.length; i++) {
-        let [f, t] = edges[i]
-        if (map[f] === undefined) map[f] = {}
-        if (map[t] === undefined) map[t] = {}
-        map[f][t] = succProb[i]
-        map[t][f] = succProb[i]
+        const u = edges[i][0],
+            v = edges[i][1]
+        const pathProb = succProb[i]
+
+        graph.has(u)
+            ? graph.set(u, [...graph.get(u), [v, pathProb]])
+            : graph.set(u, [[v, pathProb]])
+        graph.has(v)
+            ? graph.set(v, [...graph.get(v), [u, pathProb]])
+            : graph.set(v, [[u, pathProb]])
     }
-    if (map[end] === undefined) return 0
-    let res = dijkstra(n, map, start, end)
-    return res
+
+    const maxProb = Array.from({ length: n }, () => 0)
+    maxProb[start] = 1
+
+    const queue: number[] = [start]
+    while (queue.length) {
+        let curNode = queue.shift()!
+
+        for (const [nxtNode, pathProb] of graph.get(curNode)) {
+            if (maxProb[curNode] * pathProb > maxProb[nxtNode]) {
+                maxProb[nxtNode] = maxProb[curNode] * pathProb
+                queue.push(nxtNode)
+            }
+        }
+    }
+
+    return maxProb[end]
 }
