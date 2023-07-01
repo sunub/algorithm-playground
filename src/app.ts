@@ -1,45 +1,31 @@
-function shortestPathAllKeys(grid: string[]) {
-    const gridKeys: any = []
-    let start: number[] = []
-    for (let i = 0; i < grid.length; i++) {
-        let row = []
-        for (let j = 0; j < grid[0].length; j++) {
-            if (grid[i][j] === "@") {
-                start = [i, j]
-                row.push(0)
-            } else if (grid[i][j] === ".") {
-                row.push(0)
-            } else if (grid[i][j] === "#") {
-                row.push(-1)
-            } else {
-                row.push(grid[i][j])
+/**
+ * @param {number[]} cookies
+ * @param {number} k
+ * @return {number}
+ */
+var distributeCookies = function (cookies: number[], k: number) {
+    const bags = Array.from({ length: k }, () => 0)
+    let answer = Infinity
+
+    function backtracking(i: number, zeroCount: number) {
+        if (i === cookies.length) {
+            let max = -Infinity
+            for (const b of bags) {
+                max = Math.max(max, b)
             }
+            answer = Math.min(answer, max)
+
+            return
         }
-        gridKeys.push(row)
+
+        for (let j = 0; j < k; j++) {
+            bags[j] += cookies[i]
+            backtracking(i + 1, zeroCount)
+            bags[j] -= cookies[i]
+        }
     }
 
-    dfs(start[0], start[1], 0, new Set())
-
-    function dfs(i: number, j: number, sum: number, visit: Set<any>) {
-        if (i < 0 || i + 1 > grid.length || j < 0 || j + 1 > grid[0].length) {
-            return
-        }
-
-        if (gridKeys[i][j] === -1) {
-            return
-        }
-        if (visit.has(`${i} ${j}`)) {
-            return
-        }
-
-        gridKeys[i][j] = sum
-
-        visit.add(`${i} ${j}`)
-        dfs(i - 1, j, sum + 1, visit)
-        dfs(i + 1, j, sum + 1, visit)
-        dfs(i, j - 1, sum + 1, visit)
-        dfs(i, j + 1, sum + 1, visit)
-        return sum
-    }
+    backtracking(0, k)
+    return answer
 }
-console.log(shortestPathAllKeys(["@.a..", "###.#", "b.A.B"]))
+console.log(distributeCookies([8, 15, 10, 20, 8], 2))

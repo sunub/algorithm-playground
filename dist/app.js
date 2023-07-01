@@ -1,46 +1,29 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function shortestPathAllKeys(grid) {
-    const gridKeys = [];
-    let start = [];
-    for (let i = 0; i < grid.length; i++) {
-        let row = [];
-        for (let j = 0; j < grid[0].length; j++) {
-            if (grid[i][j] === "@") {
-                start = [i, j];
-                row.push(0);
-            }
-            else if (grid[i][j] === ".") {
-                row.push(0);
-            }
-            else if (grid[i][j] === "#") {
-                row.push(-1);
-            }
-            else {
-                row.push(grid[i][j]);
-            }
+/**
+ * @param {number[]} cookies
+ * @param {number} k
+ * @return {number}
+ */
+var distributeCookies = function (cookies, k) {
+    let ans = Infinity;
+    let bag = Array(k).fill(0);
+    function backtrack(i) {
+        if (i >= cookies.length) {
+            let max = -Infinity;
+            for (let b of bag)
+                max = Math.max(max, b);
+            ans = Math.min(ans, max);
+            return;
         }
-        gridKeys.push(row);
+        for (let j = 0; j < k; j++) {
+            bag[j] += cookies[i];
+            backtrack(i + 1);
+            bag[j] -= cookies[i];
+        }
     }
-    dfs(start[0], start[1], 0, new Set());
-    function dfs(i, j, sum, visit) {
-        if (i < 0 || i + 1 > grid.length || j < 0 || j + 1 > grid[0].length) {
-            return;
-        }
-        if (gridKeys[i][j] === -1) {
-            return;
-        }
-        if (visit.has(`${i} ${j}`)) {
-            return;
-        }
-        gridKeys[i][j] = sum;
-        visit.add(`${i} ${j}`);
-        dfs(i - 1, j, sum + 1, visit);
-        dfs(i + 1, j, sum + 1, visit);
-        dfs(i, j - 1, sum + 1, visit);
-        dfs(i, j + 1, sum + 1, visit);
-        return sum;
-    }
-}
-console.log(shortestPathAllKeys(["@.a..", "###.#", "b.A.B"]));
+    backtrack(0);
+    return ans;
+};
+console.log(distributeCookies([8, 15, 10, 20, 8], 2));
 //# sourceMappingURL=app.js.map
