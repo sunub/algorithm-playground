@@ -1,3 +1,17 @@
+// 859. Buddy Strings
+
+// Given two strings s and goal, return true if you can swap two letters in s so the result is equal to goal, otherwise, return false.
+
+// Swapping letters is defined as taking two indices i and j (0-indexed) such that i != j and swapping the characters at s[i] and s[j].
+
+// For example, swapping at indices 0 and 2 in "abcd" results in "cbad".
+
+// Input: s = "ab", goal = "ba"
+// Output: true
+
+// Input: s = "ab", goal = "ab"
+// Output: false
+
 var buddyStrings = function (s: string, goal: string) {
     if (s.length !== goal.length) {
         return false
@@ -38,4 +52,3 @@ var buddyStrings = function (s: string, goal: string) {
         s[secondIndex] === goal[firstIndex]
     )
 }
-console.log(buddyStrings("aaaaaaabc", "aaaaaaacb"))

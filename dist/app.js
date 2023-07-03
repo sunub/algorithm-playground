@@ -1,29 +1,43 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * @param {number[]} cookies
- * @param {number} k
- * @return {number}
- */
-var distributeCookies = function (cookies, k) {
-    let ans = Infinity;
-    let bag = Array(k).fill(0);
-    function backtrack(i) {
-        if (i >= cookies.length) {
-            let max = -Infinity;
-            for (let b of bag)
-                max = Math.max(max, b);
-            ans = Math.min(ans, max);
-            return;
+var buddyStrings = function (s, goal) {
+    if (s.length !== goal.length) {
+        return false;
+    }
+    if (s === goal) {
+        const frequency = Array(26).fill(0);
+        for (const ch of s) {
+            frequency[ch.charCodeAt(0) - "a".charCodeAt(0)] += 1;
+            if (frequency[ch.charCodeAt(0) - "a".charCodeAt(0)] === 2) {
+                return true;
+            }
         }
-        for (let j = 0; j < k; j++) {
-            bag[j] += cookies[i];
-            backtrack(i + 1);
-            bag[j] -= cookies[i];
+        return false;
+    }
+    let firstIndex = -1;
+    let secondIndex = -1;
+    for (let i = 0; i < s.length; ++i) {
+        if (s[i] !== goal[i]) {
+            if (firstIndex === -1) {
+                firstIndex = i;
+            }
+            else if (secondIndex === -1) {
+                secondIndex = i;
+            }
+            else {
+                // We have at least 3 indices with different characters,
+                // thus, we can never make the strings equal with only one swap.
+                return false;
+            }
         }
     }
-    backtrack(0);
-    return ans;
+    if (secondIndex === -1) {
+        // We can't swap if the character at only one index is different.
+        return false;
+    }
+    // All characters of both strings are the same except two indices.
+    return (s[firstIndex] === goal[secondIndex] &&
+        s[secondIndex] === goal[firstIndex]);
 };
-console.log(distributeCookies([8, 15, 10, 20, 8], 2));
+console.log(buddyStrings("aaaaaaabc", "aaaaaaacb"));
 //# sourceMappingURL=app.js.map
