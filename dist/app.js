@@ -1,43 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var buddyStrings = function (s, goal) {
-    if (s.length !== goal.length) {
-        return false;
+function minFallingPathSum(matrix) {
+    const length = matrix.length;
+    const dp = Array.from({ length: length }, () => Array.from({ length: length }, () => 0));
+    for (let i = length - 1; i >= 0; i--) {
+        dp[length - 1][i] = matrix[length - 1][i];
     }
-    if (s === goal) {
-        const frequency = Array(26).fill(0);
-        for (const ch of s) {
-            frequency[ch.charCodeAt(0) - "a".charCodeAt(0)] += 1;
-            if (frequency[ch.charCodeAt(0) - "a".charCodeAt(0)] === 2) {
-                return true;
+    for (let i = length - 2; i >= 0; i--) {
+        for (let j = length - 1; j >= 0; j--) {
+            let case1 = Infinity, case2 = Infinity, case3 = Infinity;
+            if (i + 1 < length) {
+                case1 = dp[i + 1][j];
             }
-        }
-        return false;
-    }
-    let firstIndex = -1;
-    let secondIndex = -1;
-    for (let i = 0; i < s.length; ++i) {
-        if (s[i] !== goal[i]) {
-            if (firstIndex === -1) {
-                firstIndex = i;
+            if (i + 1 < length && j + 1 < length) {
+                case2 = dp[i + 1][j + 1];
             }
-            else if (secondIndex === -1) {
-                secondIndex = i;
+            if (i + 1 < length && j - 1 >= 0) {
+                case3 = dp[i + 1][j - 1];
             }
-            else {
-                // We have at least 3 indices with different characters,
-                // thus, we can never make the strings equal with only one swap.
-                return false;
-            }
+            dp[i][j] = Math.min(case1, case2, case3) + matrix[i][j];
         }
     }
-    if (secondIndex === -1) {
-        // We can't swap if the character at only one index is different.
-        return false;
-    }
-    // All characters of both strings are the same except two indices.
-    return (s[firstIndex] === goal[secondIndex] &&
-        s[secondIndex] === goal[firstIndex]);
-};
-console.log(buddyStrings("aaaaaaabc", "aaaaaaacb"));
+}
+console.log(minFallingPathSum([
+    [2, 1, 3],
+    [6, 5, 4],
+    [7, 8, 9],
+]));
 //# sourceMappingURL=app.js.map
