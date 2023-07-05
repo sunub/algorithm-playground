@@ -1,30 +1,29 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function minFallingPathSum(matrix) {
-    const length = matrix.length;
-    const dp = Array.from({ length: length }, () => Array.from({ length: length }, () => 0));
-    for (let i = length - 1; i >= 0; i--) {
-        dp[length - 1][i] = matrix[length - 1][i];
-    }
-    for (let i = length - 2; i >= 0; i--) {
-        for (let j = length - 1; j >= 0; j--) {
-            let case1 = Infinity, case2 = Infinity, case3 = Infinity;
-            if (i + 1 < length) {
-                case1 = dp[i + 1][j];
-            }
-            if (i + 1 < length && j + 1 < length) {
-                case2 = dp[i + 1][j + 1];
-            }
-            if (i + 1 < length && j - 1 >= 0) {
-                case3 = dp[i + 1][j - 1];
-            }
-            dp[i][j] = Math.min(case1, case2, case3) + matrix[i][j];
+function longestSubarray(nums) {
+    const count = [];
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] === 0) {
+            count.push(nums[i]);
+        }
+        else {
+            count[count.length - 1] !== 0 && count.length > 0
+                ? (count[count.length - 1] += 1)
+                : count.push(1);
         }
     }
+    let answer = 0;
+    for (let i = 0; i < count.length; i++) {
+        let j = i + 1;
+        let zeroCount = count[i] === 0 ? 1 : 0;
+        let curr = count[i] !== 0 ? count[i] : 0;
+        while (zeroCount <= 1 && j < count.length) {
+            count[j] !== 0 ? (curr += count[j]) : (zeroCount += 1);
+            j += 1;
+        }
+        answer = Math.max(curr, answer);
+    }
+    return answer;
 }
-console.log(minFallingPathSum([
-    [2, 1, 3],
-    [6, 5, 4],
-    [7, 8, 9],
-]));
+console.log(longestSubarray([1, 1, 0, 1]));
 //# sourceMappingURL=app.js.map
