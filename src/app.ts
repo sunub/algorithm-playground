@@ -1,16 +1,21 @@
-function longestSubarray(nums: number[]): number {
-    let answer = 0
+function minSubArrayLen(target: number, nums: number[]): number {
+    let answer = Infinity
+    let sum = 0
+    let start = 0
     for (let i = 0; i < nums.length; i++) {
-        let j = i + 1
-        let zeroCount = nums[i] === 0 ? 1 : 0
-        let curr = nums[i] !== 0 ? nums[i] : 0
-        while (zeroCount <= 1 && j < nums.length) {
-            nums[j] !== 0 ? (curr += nums[j]) : (zeroCount += 1)
-            j += 1
+        sum += nums[i]
+        if (sum > target) {
+            while (sum > target) {
+                sum -= nums[start]
+                start += 1
+            }
         }
-        answer = Math.max(curr, answer)
+
+        if (sum >= target) {
+            answer = Math.min(answer, i - start + 1)
+        }
     }
 
-    return nums.includes(0) ? answer : (answer -= 1)
+    return answer === Infinity ? 0 : answer
 }
-console.log(longestSubarray([1, 1, 1]))
+console.log(minSubArrayLen(213, [12, 28, 83, 4, 25, 26, 25, 2, 25, 25, 25, 12]))

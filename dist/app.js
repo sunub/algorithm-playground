@@ -1,29 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function longestSubarray(nums) {
-    const count = [];
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] === 0) {
-            count.push(nums[i]);
+function minSubArrayLen(target, nums) {
+    console.log(nums.length);
+    let answer = Infinity;
+    function backtracking(i, cur, sum) {
+        if (sum >= target) {
+            answer = Math.min(answer, cur.length);
+            return;
         }
-        else {
-            count[count.length - 1] !== 0 && count.length > 0
-                ? (count[count.length - 1] += 1)
-                : count.push(1);
+        for (let j = i; j < nums.length; j++) {
+            sum += nums[j];
+            cur.push(nums[j]);
+            backtracking(j + 1, cur, sum);
+            let start = cur.pop();
+            sum -= start;
         }
     }
-    let answer = 0;
-    for (let i = 0; i < count.length; i++) {
-        let j = i + 1;
-        let zeroCount = count[i] === 0 ? 1 : 0;
-        let curr = count[i] !== 0 ? count[i] : 0;
-        while (zeroCount <= 1 && j < count.length) {
-            count[j] !== 0 ? (curr += count[j]) : (zeroCount += 1);
-            j += 1;
-        }
-        answer = Math.max(curr, answer);
-    }
-    return answer;
+    backtracking(0, [], 0);
+    return answer === Infinity ? 0 : answer;
 }
-console.log(longestSubarray([1, 1, 0, 1]));
+console.log(minSubArrayLen(213, [12, 28, 83, 4, 25, 26, 25, 2, 25, 25, 25, 12]));
 //# sourceMappingURL=app.js.map
