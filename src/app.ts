@@ -4,18 +4,19 @@ function minSubArrayLen(target: number, nums: number[]): number {
     let start = 0
     for (let i = 0; i < nums.length; i++) {
         sum += nums[i]
-        if (sum > target) {
-            while (sum > target) {
+        if (sum >= target) {
+            while (sum >= target) {
+                answer = Math.min(answer, i - start + 1)
                 sum -= nums[start]
                 start += 1
             }
         }
-
-        if (sum >= target) {
-            answer = Math.min(answer, i - start + 1)
-        }
     }
 
-    return answer === Infinity ? 0 : answer
+    if (answer === Infinity) {
+        return sum >= target ? nums.length : 0
+    }
+
+    return answer
 }
-console.log(minSubArrayLen(213, [12, 28, 83, 4, 25, 26, 25, 2, 25, 25, 25, 12]))
+console.log(minSubArrayLen(5, [2, 3, 1, 1, 1, 1, 1]))
