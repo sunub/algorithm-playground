@@ -1,22 +1,17 @@
-function minSubArrayLen(target: number, nums: number[]): number {
-    let answer = Infinity
-    let sum = 0
-    let start = 0
-    for (let i = 0; i < nums.length; i++) {
-        sum += nums[i]
-        if (sum >= target) {
-            while (sum >= target) {
-                answer = Math.min(answer, i - start + 1)
-                sum -= nums[start]
-                start += 1
-            }
+var maxConsecutiveAnswers = function (answerKey: string, k: number) {
+    let [left, right, numOfTrue, numOfFalse, max] = new Array(5).fill(0)
+    const moreChanges = () => numOfTrue > k && numOfFalse > k
+    while (right < answerKey.length) {
+        if (answerKey[right] === "T") numOfTrue++
+        if (answerKey[right] === "F") numOfFalse++
+        while (moreChanges()) {
+            if (answerKey[left] === "T") numOfTrue--
+            if (answerKey[left] === "F") numOfFalse--
+            left++
         }
+        max = Math.max(max, right - left + 1)
+        right++
     }
-
-    if (answer === Infinity) {
-        return sum >= target ? nums.length : 0
-    }
-
-    return answer
+    return max
 }
-console.log(minSubArrayLen(5, [2, 3, 1, 1, 1, 1, 1]))
+console.log(maxConsecutiveAnswers("TTFTTFTT", 1))
