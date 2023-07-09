@@ -25,28 +25,42 @@
 //     return typeof x === "number" && ((i: number) => (i *= x))
 // }
 
-function areDeeplyEqual(o1: any, o2: any): boolean {
-    const objs: [any, any][] = [[o1, o2]]
+function largestVariance(s: string): number {
+    let answer = -Infinity
+    const visit = new Set()
+    for (let i = 0; i < s.length; i++) {
+        let key = s[i]
+        const count = new Map().set(key, 1)
+        for (let j = i + 1; j < s.length; j++) {
+            key += s[j]
+            count.has(s[j])
+                ? count.set(s[j], count.get(s[j]) + 1)
+                : count.set(s[j], 1)
 
-    while (objs.length) {
-        ;[o1, o2] = objs.pop()!
-
-        if (o1 === o2) continue
-        if (typeof o1 !== "object" || typeof o2 !== "object") return false
-        if (Array.isArray(o1) !== Array.isArray(o2)) return false
-
-        const keys1 = Object.keys(o1)
-        const keys2 = Object.keys(o2)
-
-        if (keys1.length !== keys2.length) return false
-        for (const key of keys1) {
-            if (!(key in o2)) return false
-            objs.push([o1[key], o2[key]])
+            const characters = [...count.keys()]
+            let currVariance = 0
+            if (characters.length >= 2 && !visit.has(key)) {
+                currVariance = countingVariance([...count.values()])
+                visit.add(key)
+            }
+            answer = Math.max(answer, currVariance)
         }
     }
-
-    return true
+    return answer === -Infinity ? 0 : answer
 }
-console.log(
-    areDeeplyEqual({ x: null, L: [1, 2, 3] }, { x: null, L: ["1", "2", "3"] })
-)
+
+function countingVariance(countNum: number[]) {
+    let maxVariance = -Infinity
+    for (let i = 0; i < countNum.length; i++) {
+        let currVariance = -Infinity
+        for (let j = i + 1; j < countNum.length; j++) {
+            currVariance = Math.max(
+                currVariance,
+                Math.abs(countNum[i] - countNum[j])
+            )
+        }
+        maxVariance = Math.max(maxVariance, currVariance)
+    }
+    return maxVariance
+}
+console.log(largestVariance("icexiahccknibwuwgi"))

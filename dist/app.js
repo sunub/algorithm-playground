@@ -25,28 +25,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //     }
 //     return typeof x === "number" && ((i: number) => (i *= x))
 // }
-function areDeeplyEqual(o1, o2) {
-    const objs = [[o1, o2]];
-    while (objs.length) {
-        ;
-        [o1, o2] = objs.pop();
-        if (o1 === o2)
-            continue;
-        if (typeof o1 !== "object" || typeof o2 !== "object")
-            return false;
-        if (Array.isArray(o1) !== Array.isArray(o2))
-            return false;
-        const keys1 = Object.keys(o1);
-        const keys2 = Object.keys(o2);
-        if (keys1.length !== keys2.length)
-            return false;
-        for (const key of keys1) {
-            if (!(key in o2))
-                return false;
-            objs.push([o1[key], o2[key]]);
+function largestVariance(s) {
+    let answer = -Infinity;
+    for (let i = 0; i < s.length; i++) {
+        const count = new Map().set(s[i], 1);
+        for (let j = i + 1; j < s.length; j++) {
+            count.has(s[j])
+                ? count.set(s[j], count.get(s[j]) + 1)
+                : count.set(s[j], 1);
+            const characters = [...count.keys()];
+            let currVariance = 0;
+            if (characters.length >= 2) {
+                ;
+                [...count.values()].reduce((acc, curr) => {
+                    currVariance = Math.max(currVariance, Math.abs(acc - curr));
+                    return curr;
+                });
+            }
+            answer = Math.max(answer, currVariance);
         }
     }
-    return true;
+    return answer;
 }
-console.log(areDeeplyEqual({ x: null, L: [1, 2, 3] }, { x: null, L: ["1", "2", "3"] }));
+console.log(largestVariance("icexiahccknibwuwgi"));
 //# sourceMappingURL=app.js.map
