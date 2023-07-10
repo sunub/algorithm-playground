@@ -39,7 +39,7 @@ function largestVariance(s: string): number {
 
             const characters = [...count.keys()]
             let currVariance = 0
-            if (characters.length >= 2 && !visit.has(key)) {
+            if (characters.length >= 2) {
                 currVariance = countingVariance([...count.values()])
                 visit.add(key)
             }
