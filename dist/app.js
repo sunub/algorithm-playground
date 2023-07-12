@@ -1,51 +1,60 @@
 "use strict";
-// var maxConsecutiveAnswers = function (answerKey: string, k: number) {
-//     let [left, right, numOfTrue, numOfFalse, max] = new Array(5).fill(0)
-//     const moreChanges = () => numOfTrue > k && numOfFalse > k
-//     while (right < answerKey.length) {
-//         if (answerKey[right] === "T") numOfTrue++
-//         if (answerKey[right] === "F") numOfFalse++
-//         while (moreChanges()) {
-//             if (answerKey[left] === "T") numOfTrue--
-//             if (answerKey[left] === "F") numOfFalse--
-//             left++
-//         }
-//         max = Math.max(max, right - left + 1)
-//         right++
-//     }
-//     return max
-// }
-// console.log(maxConsecutiveAnswers("TTFTTFTT", 1))
 Object.defineProperty(exports, "__esModule", { value: true });
-// const multiply = function (x = 0, ...y: number[]) {
-//     if (y.length) {
-//         return y.reduce((acc: any, curr: any) => {
-//             return typeof curr === "number" && (acc *= curr)
-//         }, x)
-//     }
-//     return typeof x === "number" && ((i: number) => (i *= x))
-// }
-function largestVariance(s) {
-    let answer = -Infinity;
-    for (let i = 0; i < s.length; i++) {
-        const count = new Map().set(s[i], 1);
-        for (let j = i + 1; j < s.length; j++) {
-            count.has(s[j])
-                ? count.set(s[j], count.get(s[j]) + 1)
-                : count.set(s[j], 1);
-            const characters = [...count.keys()];
-            let currVariance = 0;
-            if (characters.length >= 2) {
-                ;
-                [...count.values()].reduce((acc, curr) => {
-                    currVariance = Math.max(currVariance, Math.abs(acc - curr));
-                    return curr;
-                });
-            }
-            answer = Math.max(answer, currVariance);
+var eventualSafeNodes = function (graph) {
+    const terminalCode = [];
+    const nodeCount = graph.length;
+    const adj = new Map();
+    for (let i = 0; i < nodeCount; i++) {
+        adj.set(i, graph[i]);
+    }
+    const visit = Array.from({ length: nodeCount }, () => false);
+    const inStack = Array.from({ length: nodeCount }, () => false);
+    for (let i = 0; i < nodeCount; i++) {
+        dfs(i, visit, inStack);
+    }
+    const safeNode = [];
+    for (let i = 0; i < nodeCount; i++) {
+        if (!inStack[i]) {
+            safeNode.push(i);
         }
     }
-    return answer;
-}
-console.log(largestVariance("icexiahccknibwuwgi"));
+    return safeNode;
+    function dfs(node, visit, inStack) {
+        if (inStack[node]) {
+            return true;
+        }
+        if (visit[node]) {
+            return false;
+        }
+        visit[node] = true;
+        inStack[node] = true;
+        for (const neighbor of adj.get(node)) {
+            if (dfs(neighbor, visit, inStack)) {
+                return true;
+            }
+        }
+        inStack[node] = false;
+        return false;
+    }
+};
+// function searchAdj(
+//     node: number,
+//     visit: Set<number>,
+//     adj: Map<number, number[]>,
+//     isCircular: boolean
+// ): boolean {
+//     if (visit.has(node)) {
+//         isCircular = true
+//         return isCircular
+//     }
+//     if (adj.get(node)?.length === 0) {
+//         return isCircular
+//     }
+//     visit.add(node)
+//     for (const currNode of adj.get(node)!) {
+//         isCircular = searchAdj(currNode, visit, adj, isCircular)
+//     }
+//     return isCircular
+// }
+console.log(eventualSafeNodes([[1, 2], [2, 3], [5], [0], [5], [], []]));
 //# sourceMappingURL=app.js.map
