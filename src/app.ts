@@ -1,37 +1,50 @@
-var longestSubsequence = function (arr: number[], difference: number) {
-    let answer = -Infinity
-    const dp = new Map()
-
-    for (const a of arr) {
-        let beforeA = dp.has(a - difference) ? dp.get(a - difference) : 0
-        dp.set(a, beforeA + 1)
-        answer = Math.max(answer, dp.get(a))
+var smallestSufficientTeam = function (
+    req_skills: string[],
+    people: string[][]
+) {
+    const n = people.length,
+        m = req_skills.length
+    const skillId = new Map()
+    for (let i = 0; i < m; i++) {
+        skillId.set(req_skills[i], i)
     }
-    console.log(dp)
+
+    const skillsMaskOfPerson = Array.from({ length: n }, () => 0)
+    for (let i = 0; i < n; i++) {
+        for (const skill of people[i]) {
+            skillsMaskOfPerson[i] |= 1 << skillId.get(skill)
+        }
+    }
+
+    const dp = Array.from({ length: 1 << m }, () => (1 << n) - 1)
+    dp[0] = 0
+
+    for (let skillsMask = 1; skillsMask < 1 << m; skillsMask++) {
+        for (let i = 0; i < n; i++) {
+            let smallerSkillsMask = skillsMask & ~skillsMaskOfPerson[i]
+            if (smallerSkillsMask !== skillsMask) {
+                let peopleMask = dp[smallerSkillsMask] | (1 << i)
+                if (peopleMask < dp[skillsMask]) {
+                    dp[skillsMask] = peopleMask
+                }
+            }
+        }
+    }
+
+    const answerMask = dp[(1 << m) - 1]
+    const answer = []
+    for (let i = 0; i < n; i++) {
+        if (((answerMask >> i) & 1) === 1) {
+            answer.push(i)
+        }
+    }
+
     return answer
 }
-console.log(longestSubsequence([1, 5, 7, 8, 5, 3, 4, 2, 1], -2))
-
-console.log(new Date("2023-06-12").getTime())
-console.log(new Date("2023-06-13").getTime())
-
-const b = [
-    {
-        date: "2023-06-12",
-    },
-    {
-        date: "2023-06-13",
-    },
-    {
-        date: "2023-06-15",
-    },
-    {
-        date: "2023-06-18",
-    },
-]
 
 console.log(
-    b.sort((a, b) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime()
-    })
+    smallestSufficientTeam(
+        ["java", "nodejs", "reactjs"],
+        [["java"], ["nodejs"], ["nodejs", "reactjs"]]
+    )
 )

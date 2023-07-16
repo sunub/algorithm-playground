@@ -1,15 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var longestSubsequence = function (arr, difference) {
-    let answer = -Infinity;
+var smallestSufficientTeam = function (req_skills, people) {
     const dp = new Map();
-    for (const a of arr) {
-        let beforeA = dp.has(a - difference) ? dp.get(a - difference) : 0;
-        dp.set(a, beforeA + 1);
-        answer = Math.max(answer, dp.get(a));
+    const answer = [];
+    let start = 0;
+    for (let i = 0; i < req_skills.length; i++) {
+        dp.set(req_skills[i], 0);
     }
-    console.log(dp);
-    return answer;
+    backtracking(0, new Set(), []);
+    function backtracking(i, accept, a) {
+        if (i >= people.length) {
+            return;
+        }
+        for (let start = i; start < people.length; start++) {
+            for (const skill of people[i]) {
+                dp.has(skill) ? dp.set(skill, dp.get(skill) + 1) : null;
+                accept.add(skill);
+            }
+            a.push(people[i]);
+            backtracking(i + 1, accept, a);
+            a.pop(people[i]);
+        }
+    }
 };
-console.log(longestSubsequence([1, 5, 7, 8, 5, 3, 4, 2, 1], -2));
+console.log(smallestSufficientTeam(["java", "nodejs", "reactjs"], [["java"], ["nodejs"], ["nodejs", "reactjs"]]));
 //# sourceMappingURL=app.js.map
