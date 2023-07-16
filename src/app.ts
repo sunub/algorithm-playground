@@ -1,50 +1,39 @@
-var smallestSufficientTeam = function (
-    req_skills: string[],
-    people: string[][]
-) {
-    const n = people.length,
-        m = req_skills.length
-    const skillId = new Map()
-    for (let i = 0; i < m; i++) {
-        skillId.set(req_skills[i], i)
-    }
+function minimumDeleteSum(s1: string, s2: string): number {
+    const savedResult = new Map()
 
-    const skillsMaskOfPerson = Array.from({ length: n }, () => 0)
-    for (let i = 0; i < n; i++) {
-        for (const skill of people[i]) {
-            skillsMaskOfPerson[i] |= 1 << skillId.get(skill)
+    function computeCost(i: number, j: number): number {
+        if (i < 0 && j < 0) {
+            return 0
         }
-    }
 
-    const dp = Array.from({ length: 1 << m }, () => (1 << n) - 1)
-    dp[0] = 0
-
-    for (let skillsMask = 1; skillsMask < 1 << m; skillsMask++) {
-        for (let i = 0; i < n; i++) {
-            let smallerSkillsMask = skillsMask & ~skillsMaskOfPerson[i]
-            if (smallerSkillsMask !== skillsMask) {
-                let peopleMask = dp[smallerSkillsMask] | (1 << i)
-                if (peopleMask < dp[skillsMask]) {
-                    dp[skillsMask] = peopleMask
-                }
-            }
+        let key = `${i} ${j}`
+        if (savedResult.has(key)) {
+            return savedResult.get(key)
         }
-    }
 
-    const answerMask = dp[(1 << m) - 1]
-    const answer = []
-    for (let i = 0; i < n; i++) {
-        if (((answerMask >> i) & 1) === 1) {
-            answer.push(i)
+        if (i < 0) {
+            savedResult.set(key, s2[j].charCodeAt(0) + computeCost(i, j - 1))
+            return savedResult.get(key)
         }
+        if (j < 0) {
+            savedResult.set(key, s1[i].charCodeAt(0) + computeCost(i - 1, j))
+            return savedResult.get(key)
+        }
+        if (s1[i].charCodeAt(0) === s2[j].charCodeAt(0)) {
+            savedResult.set(key, computeCost(i - 1, j - 1))
+        } else {
+            savedResult.set(
+                key,
+                Math.min(
+                    s1[i].charCodeAt(0) + computeCost(i - 1, j),
+                    s2[j].charCodeAt(0) + computeCost(i, j - 1)
+                )
+            )
+        }
+        return savedResult.get(key)
     }
 
-    return answer
+    return computeCost(s1.length - 1, s2.length - 1)
 }
 
-console.log(
-    smallestSufficientTeam(
-        ["java", "nodejs", "reactjs"],
-        [["java"], ["nodejs"], ["nodejs", "reactjs"]]
-    )
-)
+console.log(minimumDeleteSum("delete", "leet"))

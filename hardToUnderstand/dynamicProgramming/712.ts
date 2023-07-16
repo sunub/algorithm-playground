@@ -40,3 +40,76 @@ var minimumDeleteSum = function (s1, s2) {
 
     return dfs(0, 0)
 }
+
+function iteration(s1: string, s2: string): number {
+    const computeCost = (i: number, j: number): number => {
+        if (i < 0) {
+            let deleteCost = 0
+            for (let pointer = 0; pointer <= j; pointer++) {
+                deleteCost += s2[pointer].charCodeAt(0)
+            }
+            return deleteCost
+        }
+
+        if (j < 0) {
+            let deleteCost = 0
+            for (let pointer = 0; pointer <= j; pointer++) {
+                deleteCost += s1[pointer].charCodeAt(0)
+            }
+            return deleteCost
+        }
+
+        if (s1[i].charCodeAt(0) === s2[j].charCodeAt(0)) {
+            return computeCost(i - 1, j - 1)
+        } else {
+            return Math.min(
+                s1[i].charCodeAt(0) + computeCost(i - 1, j),
+                Math.min(
+                    s2[j].charCodeAt(0) + computeCost(i, j - 1),
+                    s1[i].charCodeAt(0) +
+                        s2[j].charCodeAt(0) +
+                        computeCost(i - 1, j - 1)
+                )
+            )
+        }
+    }
+    return computeCost(s1.length - 1, s2.length - 1)
+}
+
+function topDown(s1: string, s2: string): number {
+    const savedResult = new Map()
+
+    function computeCost(i: number, j: number): number {
+        if (i < 0 && j < 0) {
+            return 0
+        }
+
+        let key = `${i} ${j}`
+        if (savedResult.has(key)) {
+            return savedResult.get(key)
+        }
+
+        if (i < 0) {
+            savedResult.set(key, s2[j].charCodeAt(0) + computeCost(i, j - 1))
+            return savedResult.get(key)
+        }
+        if (j < 0) {
+            savedResult.set(key, s1[i].charCodeAt(0) + computeCost(i - 1, j))
+            return savedResult.get(key)
+        }
+        if (s1[i].charCodeAt(0) === s2[j].charCodeAt(0)) {
+            savedResult.set(key, computeCost(i - 1, j - 1))
+        } else {
+            savedResult.set(
+                key,
+                Math.min(
+                    s1[i].charCodeAt(0) + computeCost(i - 1, j),
+                    s2[j].charCodeAt(0) + computeCost(i, j - 1)
+                )
+            )
+        }
+        return savedResult.get(key)
+    }
+
+    return computeCost(s1.length - 1, s2.length - 1)
+}
