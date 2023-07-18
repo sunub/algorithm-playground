@@ -39,3 +39,13 @@ function minimumDeleteSum(s1: string, s2: string): number {
 }
 
 console.log(minimumDeleteSum("delete", "leet"))
+
+const cache = new Set()
+cache.add(2)
+cache.add(3)
+console.log(cache)
+if (cache.has(2)) {
+    cache.delete(2)
+    cache.add(2)
+}
+console.log(cache)
