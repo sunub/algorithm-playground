@@ -1,29 +1,24 @@
-/**
- * @param {number[][]} intervals
- * @return {number}
- */
-var eraseOverlapIntervals = function (intervals: number[][]) {
-    intervals = intervals.sort((a, b) => a[1] - b[1])
+var s = function (asteroids: number[]) {
+    for (let i = 1; i < asteroids.length; i++) {
+        const direction1 = Math.sign(asteroids[i - 1])
+        const direction2 = Math.sign(asteroids[i])
 
-    let needToDelete = 0
-    let endNum = -Infinity
+        if (direction1 + direction2 === 0 && asteroids[i - 1] > asteroids[i]) {
+            const abs1 = Math.abs(asteroids[i - 1])
+            const abs2 = Math.abs(asteroids[i])
 
-    for (let i = 0; i < intervals.length; i++) {
-        if (intervals[i][0] >= endNum) {
-            endNum = intervals[i][1]
-        } else {
-            needToDelete += 1
+            if (abs1 === abs2) {
+                asteroids.splice(i - 1, 2)
+            } else if (abs2 < abs1) {
+                asteroids.splice(i, 1)
+            } else if (abs2 > abs1) {
+                asteroids.splice(i - 1, 1)
+            }
+
+            i = 0
         }
     }
 
-    return needToDelete
+    return asteroids
 }
-console.log(
-    eraseOverlapIntervals([
-        [0, 2],
-        [1, 3],
-        [2, 4],
-        [3, 5],
-        [4, 6],
-    ])
-)
+console.log(s([-2, 1, -2, 1]))
