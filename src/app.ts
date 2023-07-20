@@ -1,24 +1,22 @@
-var s = function (asteroids: number[]) {
-    for (let i = 1; i < asteroids.length; i++) {
-        const direction1 = Math.sign(asteroids[i - 1])
-        const direction2 = Math.sign(asteroids[i])
+var findMinArrowShots = function (points: number[][]) {
+    points.sort((a, b) => a[1] - b[1])
 
-        if (direction1 + direction2 === 0 && asteroids[i - 1] > asteroids[i]) {
-            const abs1 = Math.abs(asteroids[i - 1])
-            const abs2 = Math.abs(asteroids[i])
-
-            if (abs1 === abs2) {
-                asteroids.splice(i - 1, 2)
-            } else if (abs2 < abs1) {
-                asteroids.splice(i, 1)
-            } else if (abs2 > abs1) {
-                asteroids.splice(i - 1, 1)
-            }
-
-            i = 0
+    let answer = 1
+    let shootingPoint = points[0][1]
+    for (let i = 1; i < points.length; i++) {
+        if (shootingPoint < points[i][0] || shootingPoint > points[i][1]) {
+            answer += 1
+            shootingPoint = points[i][1]
         }
     }
 
-    return asteroids
+    return answer
 }
-console.log(s([-2, 1, -2, 1]))
+console.log(
+    findMinArrowShots([
+        [10, 16],
+        [2, 8],
+        [1, 6],
+        [7, 12],
+    ])
+)
