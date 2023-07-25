@@ -1,21 +1,14 @@
-function myPow(x: number, n: number): number {
-    if (n === 0) return 1
-    if (Math.abs(x) === 1) {
-        if (n % 2 === 0) return 1
-        else return x
-    }
+var findLongestChain = function (pairs: number[][]) {}
 
-    if (n < 0) {
-        x = 1 / x
-        n = n * -1
-    }
-
-    let res = 1
-
-    while (n > 0) {
-        res *= x
-        n--
-    }
-
-    return res
-}
+console.log(
+    findLongestChain([
+        [-10, -8],
+        [8, 9],
+        [-5, 0],
+        [6, 10],
+        [-6, -4],
+        [1, 7],
+        [9, 10],
+        [-4, 7],
+    ])
+)

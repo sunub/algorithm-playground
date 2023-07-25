@@ -1,24 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function myPow(x, n) {
-    if (n === 0)
-        return 1;
-    if (Math.abs(x) === 1) {
-        if (n % 2 === 0)
-            return 1;
-        else
-            return x;
+var findLongestChain = function (pairs) {
+    pairs = pairs.sort((a, b) => a[0] - b[0]);
+    let answer = 1;
+    for (let i = 0; i < pairs.length; i++) {
+        let count = 1;
+        let pair = pairs[i];
+        for (let j = 0; j < pairs.length; j++) {
+            if (i !== j && pair[1] < pairs[j][0]) {
+                pair = pairs[j];
+                count += 1;
+            }
+        }
+        answer = Math.max(answer, count);
     }
-    if (n < 0) {
-        x = 1 / x;
-        n = n * -1;
-    }
-    let res = 1;
-    while (n > 0) {
-        res *= x;
-        n--;
-    }
-    return res;
-}
-console.log(myPow(2, -3));
+    console.log(pairs);
+    return answer;
+};
+console.log(findLongestChain([
+    [7, 9],
+    [4, 5],
+    [7, 9],
+    [-7, -1],
+    [0, 10],
+    [3, 10],
+    [3, 6],
+    [2, 3],
+]));
 //# sourceMappingURL=app.js.map
