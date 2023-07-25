@@ -19,4 +19,3 @@ function myPow(x: number, n: number): number {
 
     return res
 }
-console.log(myPow(2, 1024))
