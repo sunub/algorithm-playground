@@ -1,14 +1,33 @@
-var findLongestChain = function (pairs: number[][]) {}
+/**
+ * @param {number[]} dist
+ * @param {number} hour
+ * @return {number}
+ */
+var minSpeedOnTime = function (dist: number[], hour: number) {
+    function canReachOnTime(speed: number) {
+        let total_time =
+            dist
+                .slice(0, -1)
+                .reduce((acc, d) => acc + Math.ceil(d / speed), 0) +
+            dist[dist.length - 1] / speed
+        return total_time <= hour
+    }
 
-console.log(
-    findLongestChain([
-        [-10, -8],
-        [8, 9],
-        [-5, 0],
-        [6, 10],
-        [-6, -4],
-        [1, 7],
-        [9, 10],
-        [-4, 7],
-    ])
-)
+    let left = 1,
+        right = 10 ** 7
+    while (left < right) {
+        let mid = Math.floor((left + right) / 2)
+        if (canReachOnTime(mid)) {
+            right = mid
+        } else {
+            left = mid + 1
+        }
+    }
+
+    if (canReachOnTime(left)) {
+        return left
+    } else {
+        return -1
+    }
+}
+console.log(minSpeedOnTime([1, 3, 2], 6))

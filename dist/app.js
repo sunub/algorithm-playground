@@ -1,30 +1,34 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var findLongestChain = function (pairs) {
-    pairs = pairs.sort((a, b) => a[0] - b[0]);
-    let answer = 1;
-    for (let i = 0; i < pairs.length; i++) {
-        let count = 1;
-        let pair = pairs[i];
-        for (let j = 0; j < pairs.length; j++) {
-            if (i !== j && pair[1] < pairs[j][0]) {
-                pair = pairs[j];
-                count += 1;
-            }
-        }
-        answer = Math.max(answer, count);
+/**
+ * @param {number[]} dist
+ * @param {number} hour
+ * @return {number}
+ */
+var minSpeedOnTime = function (dist, hour) {
+    function canReachOnTime(speed) {
+        let total_time = dist
+            .slice(0, -1)
+            .reduce((acc, d) => acc + Math.ceil(d / speed), 0) +
+            dist[dist.length - 1] / speed;
+        return total_time <= hour;
     }
-    console.log(pairs);
-    return answer;
+    let left = 1, right = 10 ** 7;
+    while (left < right) {
+        let mid = Math.floor((left + right) / 2);
+        if (canReachOnTime(mid)) {
+            right = mid;
+        }
+        else {
+            left = mid + 1;
+        }
+    }
+    if (canReachOnTime(left)) {
+        return left;
+    }
+    else {
+        return -1;
+    }
 };
-console.log(findLongestChain([
-    [7, 9],
-    [4, 5],
-    [7, 9],
-    [-7, -1],
-    [0, 10],
-    [3, 10],
-    [3, 6],
-    [2, 3],
-]));
+console.log(minSpeedOnTime([1, 3, 2], 6));
 //# sourceMappingURL=app.js.map
