@@ -3,11 +3,9 @@
         "target": "ES2022",
         "allowJs": true,
         "skipLibCheck": true,
-        "strict": true,
         "module": "NodeNext",
         "moduleResolution": "nodenext",
         "isolatedModules": false,
-        "noImplicitAny": true,
         "strictNullChecks": true,
         "sourceMap": true,
         "outDir": "dist"
