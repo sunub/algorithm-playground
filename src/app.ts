@@ -1,15 +1,5 @@
-function wordBreak(s: string, wordDict: string[]) {
-    let answer = true
-
-    return answer
-
-    function breakingWord(string: string, dict: string) {
-        if (string.includes(dict)) {
-            console.log(string.split(dict))
-        } else {
-            answer = false
-        }
-        return
-    }
+var generateTrees = function (n) {
+    let index = 0
+    const nums = Array.from({ length: n }, () => (index += 1))
 }
-console.log(wordBreak("applepenapple", ["apple", "pen"]))
+console.log(generateTrees(3))
