@@ -1,32 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var minimumDeleteSum = function (s1, s2) {
-    const saveResult = new Map();
-    return computeCost(s1.length - 1, s2.length - 1);
-    function computeCost(i, j) {
-        if (i < 0 && j < 0) {
-            return 0;
-        }
-        let key = `${i} ${j}`;
-        if (saveResult.has(key)) {
-            return saveResult.get(key);
-        }
-        if (i < 0) {
-            saveResult.set(key, s2[j].charCodeAt(0) + computeCost(i, j - 1));
-            return saveResult.get(key);
-        }
-        if (j < 0) {
-            saveResult.set(key, s1[i].charCodeAt(0) + computeCost(i - 1, j));
-            return saveResult.get(key);
-        }
-        if (s1[i] === s2[j]) {
-            saveResult.set(key, computeCost(i - 1, j - 1));
+const removeDuplicates = function (nums) {
+    let index = 0;
+    let duplicate = 1;
+    for (let traverse = 1; traverse < nums.length; traverse++) {
+        if (nums[index] === nums[traverse]) {
+            duplicate++;
         }
         else {
-            saveResult.set(key, Math.min(s1[i].charCodeAt(0) + computeCost(i, j - 1), s2[j].charCodeAt(0) + computeCost(i - 1, j)));
+            duplicate = 1;
         }
-        return saveResult.get(key);
+        if (duplicate <= 2) {
+            index++;
+            nums[index] = nums[traverse];
+        }
     }
+    nums.length = index + 1; // Truncate the array to remove duplicates
+    console.log(nums);
+    return index + 1;
 };
-console.log(minimumDeleteSum("delete", "leet"));
+removeDuplicates([0, 0, 1, 1, 1, 1, 2, 3, 3]);
+const nums = [1, 2, "a", 3, 4];
+console.log(nums.sort((a, b) => a - b));
 //# sourceMappingURL=app.js.map
