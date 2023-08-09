@@ -1,25 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const removeDuplicates = function (nums) {
-    let index = 0;
-    let duplicate = 1;
-    for (let traverse = 1; traverse < nums.length; traverse++) {
-        if (nums[index] === nums[traverse]) {
-            duplicate++;
+var minimizeMax = function (nums, p) {
+    const cases = Array.from({ length: nums.length });
+    const diffs = Array.from({ length: nums.length }, () => Infinity);
+    backtracking(0, [], 0);
+    function backtracking(start, curr, index) {
+        if (curr.length === 2) {
+            let diff = Math.abs(curr[0] - curr[1]);
+            if (diff < diffs[index]) {
+                cases[index] = [...curr];
+            }
+            return;
         }
-        else {
-            duplicate = 1;
-        }
-        if (duplicate <= 2) {
-            index++;
-            nums[index] = nums[traverse];
+        for (let i = start; i < nums.length; i++) {
+            curr.push(nums[i]);
+            backtracking(i + 1, curr, index);
+            index += 1;
+            curr.pop();
         }
     }
-    nums.length = index + 1; // Truncate the array to remove duplicates
-    console.log(nums);
-    return index + 1;
 };
-removeDuplicates([0, 0, 1, 1, 1, 1, 2, 3, 3]);
-const nums = [1, 2, "a", 3, 4];
-console.log(nums.sort((a, b) => a - b));
+minimizeMax([10, 1, 2, 7, 1, 3], 2);
 //# sourceMappingURL=app.js.map
