@@ -1,16 +1,40 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var hIndex = function (citations) {
-    let n = citations.length;
-    let papers = Array.from({ length: n + 1 }, () => 0);
-    for (let c of citations) {
-        papers[Math.min(n, c)]++;
+var change = function (amount, coins) {
+    let answer = 0;
+    const n = coins.length;
+    for (let i = n - 1; i >= 0; i--) {
+        let remainIndex = Math.floor(amount / coins[i]);
+        const remain = amount % coins[i];
+        let curr = 0;
+        if (remain === 0) {
+            answer += 1;
+        }
+        else {
+            while (remainIndex >= 1) {
+                curr = coins[i] * remainIndex;
+                divide(curr, amount, i);
+                remainIndex -= 1;
+            }
+        }
     }
-    let k = n;
-    for (let s = papers[n]; k > s; s += papers[k]) {
-        k -= 1;
+    return answer;
+    function divide(num, amount, index) {
+        if (index < 0)
+            return;
+        const remain = amount % num;
+        index -= 1;
+        if (remain === 0) {
+            answer += 1;
+            return;
+        }
+        else if (remain > 0) {
+            return divide(coins[index], remain, index);
+        }
+        else {
+            return;
+        }
     }
-    return k;
 };
-hIndex([3, 0, 6, 1, 5]);
+console.log(change(500, [1, 2, 5]));
 //# sourceMappingURL=app.js.map
