@@ -1,76 +1,41 @@
-var findKthLargest = function (nums, k) {
-    const maxHeap = new MaxHeap()
-
-    for (let i = 0; i < nums.length; i++) {
-        maxHeap.insert(nums[i])
-    }
-
-    let answer
-    for (let i = 0; i < k; i++) {
-        answer = maxHeap.extractMax()
-    }
-
-    return answer
+function ListNode(val, next) {
+    this.val = val === undefined ? 0 : val
+    this.next = next === undefined ? null : next
 }
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @param {number} x
+ * @return {ListNode}
+ */
+var partition = function (head, x) {
+    //creating two seperate linked list and then merging it.
+    let beforeHead = new ListNode(0)
+    let before = beforeHead
+    let afterHead = new ListNode(0)
+    let after = afterHead
 
-class MaxHeap {
-    root: number[]
-    constructor() {
-        this.root = []
-        this.bubbleUp(this.root.length - 1)
-    }
-
-    insert(val: number) {
-        this.root.push(val)
-        this.bubbleUp(this.root.length - 1)
-    }
-
-    bubbleUp(index: number) {
-        while (index > 0) {
-            let parent = Math.floor((index + 1) / 2) - 1
-            if (this.root[parent] < this.root[index]) {
-                ;[this.root[parent], this.root[index]] = [
-                    this.root[index],
-                    this.root[parent],
-                ]
-            }
-            index = parent
+    let current = head
+    while (current) {
+        if (current.val < x) {
+            before.next = current
+            before = before.next
+        } else {
+            after.next = current
+            after = after.next
         }
+        current = current.next
     }
 
-    extractMax() {
-        var max = this.root[0]
-        this.root[0] = this.root.pop()!
-        this.bubbleDown(0)
-        return max
-    }
-
-    bubbleDown(index: number) {
-        while (true) {
-            let child = (index + 1) * 2
-            let sibling = child - 1
-            let toSwap: any = null
-            if (this.root[index] < this.root[child]) {
-                toSwap = child
-            }
-            if (
-                this.root[index] < this.root[sibling] &&
-                (this.root[child] == null ||
-                    (this.root[child] !== null &&
-                        this.root[sibling] > this.root[child]))
-            ) {
-                toSwap = sibling
-            }
-            if (toSwap == null) {
-                break
-            }
-            ;[this.root[toSwap], this.root[index]] = [
-                this.root[index],
-                this.root[toSwap],
-            ]
-            index = toSwap
-        }
-    }
+    after.next = null // this is important to remove any old links
+    console.log(afterHead)
+    before.next = afterHead.next
+    return beforeHead.next
 }
-
 console.log(findKthLargest([3, 2, 3, 1, 2, 4, 5, 5, 6], 4))
