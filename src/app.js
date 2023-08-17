@@ -1,73 +1,43 @@
-const COLORS = {
-    text: {
-        light: `oklch(21.08% 0.055 34.69)`,
-        dark: `oklch(100% 0 31.08)`,
-    },
-    background: {
-        light: `oklch(97.14% 0.011 31.07)`,
-        dark: `oklch(54.74% 0.023 238.99)`,
-    },
-    primary: {
-        light: `oklch(100% 0 0 / 0.8)`,
-        dark: `oklch(34% 0.019 229.64)`,
-    },
-    highlightColor: {
-        light: `oklch(70.8% 0.165 32.85)`,
-        dark: `oklch(64.86% 0.181 249.54)`,
-    },
-}
+function updateMatrix(mat) {
+    const m = mat.length
+    const n = mat[0].length
 
-function setColorsByTheme() {
-    const COLORS = "🌈"
-
-    function getInitialColorMode() {
-        const persistedColorPreference =
-            window.localStorage.getItem("theme-preference")
-        const hasPersistedPreference =
-            typeof persistedColorPreference === "string"
-
-        if (hasPersistedPreference) {
-            return persistedColorPreference
-        }
-
-        const mql = window.matchMedia("(prefers-color-scheme: dark)")
-        const hasMediaQueryPreference = typeof mql.matches === "boolean"
-        if (hasMediaQueryPreference) {
-            if (mql.matches) {
-                setLocalStorage("dark")
-                return "dark"
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            if (mat[i][j] === 1) {
+                const visit = Array.from({ length: m }, () =>
+                    Array.from({ length: n }, () => false)
+                )
+                mat[i][j] = bfs(i, j, visit)
             }
-            setLocalStorage("light")
-            return "light"
+        }
+    }
+
+    return mat
+
+    function bfs(i, j, visit) {
+        if (i < 0 || i + 1 > m || j < 0 || j + 1 > n || visit[i][j]) {
+            return Number.MAX_SAFE_INTEGER
         }
 
-        return "light"
+        if (mat[i][j] === 0) {
+            return 0
+        }
+
+        visit[i][j] = true
+        const a = bfs(i - 1, j, visit)
+        const b = bfs(i + 1, j, visit)
+        const c = bfs(i, j - 1, visit)
+        const d = bfs(i, j + 1, visit)
+
+        return 1 + Math.min(a, b, c, d)
     }
-
-    function setLocalStorage(data) {
-        window.localStorage.setItem("theme-preference", data)
-    }
-
-    const colorMode = getInitialColorMode()
-
-    const root = document.firstElementChild
-
-    root.setAttribute("data-color-mode", colorMode)
-    Object.entries(COLORS).map(([name, colorByTheme]) => {
-        const cssVarName = `--color-${name}`
-
-        root.style.setProperty(cssVarName, colorByTheme[colorMode])
-    })
 }
 
-function InitTheme() {
-    const boundFn = String(setColorsByTheme).replace(
-        "🌈",
-        JSON.stringify(COLORS)
-    )
-
-    console.log(boundFn)
-    const calledFunction = `(${boundFn})()`
-}
-
-InitTheme()
+console.log(
+    updateMatrix([
+        [0, 0, 0],
+        [0, 1, 0],
+        [1, 1, 1],
+    ])
+)
