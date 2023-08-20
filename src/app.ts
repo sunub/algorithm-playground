@@ -1,22 +1,27 @@
-function updateMatrix(mat: number[][]): number[][] {
-    const m = mat.length - 1
-    const n = mat[0].length - 1
-
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (mat[i][j] === 1) {
-                bfs(i, j, 0)
-            }
-        }
+class Union {
+    disjoint: number[]
+    group: number
+    constructor(n: number) {
+        this.disjoint = Array.from({ length: n }, (v, i) => (v = i))
+        this.group = n
     }
 
-    function bfs(i: number, j: number, count) {}
+    find(index: number) {
+        if (this.disjoint[index] === index) return index
+        this.disjoint[index] = this.find(this.disjoint[index])
+        return this.disjoint[index]
+    }
+
+    quick(x: number, y: number) {
+        const rootX = this.find(x)
+        const rootY = this.find(y)
+
+        if (rootX !== rootY) {
+            this.disjoint[rootY] = rootX
+            this.group -= 1
+        }
+    }
 }
 
-console.log(
-    updateMatrix([
-        [0, 0, 0],
-        [0, 1, 0],
-        [0, 0, 0],
-    ])
-)
+const u = new Union(5)
+u.find(2)
