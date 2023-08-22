@@ -1,22 +1,15 @@
-/**
- * @param {string} s
- * @return {boolean}
- */
-var repeatedSubstringPattern = function (s: string) {
-    let sub = ""
+var convertToTitle = function (columnNumber: number) {
+    let answer: any[] = []
+    const baseNumber = 65
 
-    if (s.length < 2) {
-        return false
+    while (columnNumber > 0) {
+        columnNumber -= 1
+
+        const b = columnNumber % 26
+        answer.push(String.fromCharCode((columnNumber % 26) + baseNumber))
+        columnNumber = Math.floor(columnNumber / 26)
     }
-
-    for (let i = 0; i < Math.floor(s.length / 2); i++) {
-        sub += s[i]
-        if (!s.split(sub).join("")) {
-            return true
-        }
-    }
-
-    return false
+    return answer.reverse().join("")
 }
 
-console.log(repeatedSubstringPattern("abc"))
+console.log(convertToTitle(2147483647))

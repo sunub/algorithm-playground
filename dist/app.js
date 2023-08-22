@@ -1,22 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * @param {string} s
- * @return {boolean}
- */
-var repeatedSubstringPattern = function (s) {
-    const n = s.length;
-    for (let i = 0; i < Math.floor(n / 2); i++) {
-        if (n % i === 0) {
-            let pattern = "";
-            for (let j = 0; j < Math.floor(n / i); j++) {
-                pattern += s[j];
-            }
-            if (s === pattern) {
-                return true;
-            }
-        }
+var convertToTitle = function (columnNumber) {
+    let answer = [];
+    const baseNumber = 65;
+    while (columnNumber > 0) {
+        columnNumber -= 1;
+        const b = columnNumber % 26;
+        answer.push(String.fromCharCode((columnNumber % 26) + baseNumber));
+        columnNumber = Math.floor(columnNumber / 26);
     }
+    return answer.reverse().join("");
 };
-repeatedSubstringPattern("abcabcabc");
+console.log(convertToTitle(2147483647));
 //# sourceMappingURL=app.js.map
