@@ -1,15 +1,42 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var convertToTitle = function (columnNumber) {
-    let answer = [];
-    const baseNumber = 65;
-    while (columnNumber > 0) {
-        columnNumber -= 1;
-        const b = columnNumber % 26;
-        answer.push(String.fromCharCode((columnNumber % 26) + baseNumber));
-        columnNumber = Math.floor(columnNumber / 26);
+var reorganizeString = function (s) {
+    if (s.length <= 1)
+        return s;
+    let sArray = s.split("");
+    const n = s.length;
+    const queue = [];
+    let i = 1;
+    while (i < sArray.length) {
+        if (sArray[i] === sArray[i - 1]) {
+            queue.push(s[i]);
+            sArray = [...sArray.slice(0, i), ...sArray.slice(i + 1, n)];
+            continue;
+        }
+        i += 1;
     }
-    return answer.reverse().join("");
+    while (queue.length) {
+        let curr = queue.pop();
+        for (let i = 0; i <= sArray.length; i++) {
+            if (i === 0 && sArray[i] !== curr) {
+                sArray.unshift(curr);
+                break;
+            }
+            if (i === sArray.length) {
+                curr !== sArray[i - 1] ? sArray.push(curr) : null;
+                break;
+            }
+            if (sArray[i - 1] !== curr && sArray[i] !== curr) {
+                sArray = [
+                    ...sArray.slice(0, i),
+                    curr,
+                    ...sArray.slice(i, sArray.length),
+                ];
+                break;
+            }
+        }
+    }
+    return sArray.length === s.length ? sArray.join("") : "";
 };
-console.log(convertToTitle(2147483647));
+console.log(reorganizeString("baabb"));
 //# sourceMappingURL=app.js.map
