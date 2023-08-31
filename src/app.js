@@ -1,48 +1,38 @@
+/**
+ * @param {Array} arr1
+ * @param {Array} arr2
+ * @return {Array}
+ */
 var join = function (arr1, arr2) {
-    const answer = []
+    const newArray = new Map()
 
-    while (arr1.length) {
-        const curr = {}
-        const currArr1 = arr1.shift()
+    arr1.map((arr) => {
+        newArray.set(arr.id, arr)
+    })
 
-        for (let i = 0; i < arr2.length; i++) {
-            const id = arr2[i].id
-
-            if (currArr1.id === id) {
-                curr.id = id
-
-                const key1 = Object.keys(currArr1).filter((key) => key !== "id")
-                const key2 = Object.keys(arr2).filter((key) => key !== "id")
-
-                let keys, target
-                if (key1.length > key2.length) {
-                    keys = key1
-                    target = currArr1
-                } else {
-                    keys = key2
-                    target = arr2
-                }
-
-                keys.map((key) => (curr[`${key}`] = target[key]))
-                break
-            } else {
-            }
+    arr2.map((arr) => {
+        if (newArray.has(arr.id)) {
+            newArray.set(arr.id, { ...newArray.get(arr.id), ...arr })
+        } else {
+            newArray.set(arr.id, { ...arr })
         }
+    })
 
-        answer.push(curr)
-    }
+    const answer = [...newArray.values()]
+    answer.sort((a, b) => a.id - b.id)
 
-    console.log(answer)
+    return answer
 }
+
 console.log(
     join(
-        [{ id: 1, b: { b: 94 }, v: [4, 3], y: 48 }],
-        [{ id: 1, b: { c: 84 }, v: [1, 3] }]
+        [
+            { id: 1, x: 2, y: 3 },
+            { id: 2, x: 3, y: 6 },
+        ],
+        [
+            { id: 2, x: 10, y: 20 },
+            { id: 3, x: 0, y: 0 },
+        ]
     )
 )
-
-const a = [1, 2, 3, 4, 5]
-const b = [1, 2, 3]
-
-const c = new Set(a)
-const d = new Set(b)
