@@ -1,29 +1,24 @@
-function maximalSquare(matrix: string[][]): number {
-    const row = matrix.length,
-        cols = matrix[0].length
-    const dp = Array.from({ length: row + 1 }, () =>
-        Array.from({ length: cols + 1 }, () => 0)
-    )
-    let maxLength = 0
+var cancellable = function (fn, args, t) {
+    fn(...args)
+    const timer = setInterval(() => fn(...args), t)
 
-    for (let i = 1; i < row; i++) {
-        for (let j = 1; j < cols; j++) {
-            if (matrix[i][j] === "1") {
-                dp[i][j] =
-                    Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]) + 1
-                maxLength = Math.max(maxLength, dp[i][j])
-            }
-        }
-    }
-
-    return maxLength
+    const cancelFn = () => clearInterval(timer)
+    return cancelFn
 }
 
-console.log(
-    maximalSquare([
-        ["1", "0", "1", "0", "0"],
-        ["1", "0", "1", "1", "1"],
-        ["1", "1", "1", "1", "1"],
-        ["1", "0", "0", "1", "0"],
-    ])
-)
+const fn = (x) => x * 2
+
+const start = performance.now()
+
+const result: any[] = []
+const log = () => {
+    const diff = Math.floor(performance.now() - start)
+    result.push(`{time: ${diff}`)
+}
+const cancle = cancellable(log, [4], 35)
+
+setTimeout(() => {
+    cancle()
+}, 190)
+
+console.log(result)
