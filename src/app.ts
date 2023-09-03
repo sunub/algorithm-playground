@@ -1,47 +1,15 @@
-var minExtraChar = function (s: string, dictionary: string[]) {
-    let sToArray = s.split("")
-    const visit = new Set()
+var compactObject = function (obj) {
+    if (!Array.isArray(obj)) {
+        const objToArray = Object.entries(obj)
 
-    for (let i = 0; i < dictionary.length; i++) {
-        for (let j = 0; j < dictionary[i].length; j++) {
-            if (!sToArray.includes(dictionary[i][j])) {
-                console.log(1)
-            }
-            if (
-                sToArray.includes(dictionary[i][j]) &&
-                !visit.has(dictionary[i])
-            ) {
-                const index = sToArray.indexOf(dictionary[i][j])
-
-                sToArray = [
-                    ...sToArray.slice(0, index),
-                    ...sToArray.slice(index + 1, sToArray.length),
-                ]
+        for (const [key, values] of objToArray) {
+            if (values) {
+                while (values) {
+                    const curr = values.pop()
+                }
             }
         }
-        visit.add(dictionary[i])
     }
-
-    return sToArray.length
 }
 
-console.log(
-    minExtraChar("dwmodizxvvbosxxw", [
-        "ox",
-        "lb",
-        "diz",
-        "gu",
-        "v",
-        "ksv",
-        "o",
-        "nuq",
-        "r",
-        "txhe",
-        "e",
-        "wmo",
-        "cehy",
-        "tskz",
-        "ds",
-        "kzbu",
-    ])
-)
+console.log(compactObject({ a: null, b: [false, 1] }))
