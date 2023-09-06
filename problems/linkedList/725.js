@@ -55,7 +55,6 @@ var splitListToParts = function (head, k) {
             ;[n.val, isInserted] = [num, true]
 
             j + 1 < dividedNum[i] ? (n.next = new ListNode()) : null
-
             ;[n, j] = [n.next, j + 1]
         }
 
@@ -78,4 +77,29 @@ function dividK(k, count) {
     }
 
     return dividedK
+}
+
+function betterEffectiveSolution(head, k) {
+    const parts = Array.from({ length: k }, () => new ListNode())
+    let len = 0
+    for (let node = head; node !== null; node = node.next) {
+        len += 1
+    }
+
+    // 자연수 분해의 값을 나는 배열을 이용해서 구했지만 %를 통해 나머지 값을 앞에서 부터 하나씩 줄여가면서 모든 k개의 배열에 최소 1개씩의 값을 부여하고 앞에서부터 더 많은 양의 list를 나눠 받을 수 있게끔 했다.
+    let n = Math.floor(len / k),
+        r = len % k
+    let node = head,
+        prev = null
+    for (let i = 0; node !== null && i < k; i++, r--) {
+        parts[i] = node
+
+        for (let j = 0; j < n + (r > 0 ? 1 : 0); j++) {
+            prev = node
+            node = node.next
+        }
+        prev.next = null
+    }
+
+    return parts
 }
