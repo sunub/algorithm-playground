@@ -56,3 +56,28 @@ var reverseBetween = function (head, left, right) {
 
     return head
 }
+
+var betterSolution = function (head, left, right) {
+    let dummy = new ListNode(0, head)
+
+    let leftPrev = dummy
+    let curr = head
+    let prev = null
+
+    for (let i = 0; i < left; i++) {
+        curr = curr.next
+        leftPrev = leftPrev.next
+    }
+
+    for (let i = 0; j < right - left; i++) {
+        let tmp = curr.next
+        curr.next = prev
+        prev = curr
+        curr = tmp
+    }
+
+    leftPrev.next.next = curr
+    leftPrev.next = prev
+
+    return leftPrev
+}
