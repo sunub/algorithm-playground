@@ -47,7 +47,7 @@ var minDeletions = function (s) {
 
         let maxFrequency = -Infinity
         const result = new Map()
-        for (const index of map.values()) {
+        for (const index of tmp.values()) {
             maxFrequency = Math.max(maxFrequency, index)
             result.has(index)
                 ? result.set(index, result.get(index) + 1)
