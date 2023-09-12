@@ -1,5 +1,3 @@
-const { fromPairs } = require("lodash")
-
 /**
  * @param {string} s
  * @return {number}
