@@ -31,24 +31,12 @@ var minDeletions = function (s) {
     const n = s.length
     const [maxFrequency, frequencyMap] = countWordFrequence()
 
-    let counts = Array.from({ length: maxFrequency }, () => 0)
+    let frequencyCounts = Array.from({ length: maxFrequency }, () => 0)
     for (const [frequency] of frequencyMap.keys()) {
-        counts[frequency - 1] = frequencyMap.get(frequency)
+        frequencyCounts[frequency - 1] = frequencyMap.get(frequency)
     }
 
-    let i = 0,
-        answer = 0
-    while (i < counts.length) {
-        if (counts[i] > 1) {
-            i - 1 >= 0 ? (counts[i - 1] += 1) : null
-            counts[i] -= 1
-            ;[i, answer] = [0, answer + 1]
-        } else {
-            i += 1
-        }
-    }
-
-    return answer
+    return deduplication(frequencyCounts)
 
     function countWordFrequence() {
         const tmp = new Map()
@@ -67,5 +55,23 @@ var minDeletions = function (s) {
         }
 
         return [maxFrequency, result]
+    }
+
+    function deduplication(aCounts) {
+        const n = aCounts.length
+        let i = 0,
+            result = 0
+        while (i < n) {
+            let prevCount = i - 1
+            let currCount = aCounts[i]
+
+            if (currCount > 1) {
+                prevCount >= 0 ? (aCounts[prevCount] += 1) : null
+                aCounts[i] -= 1
+                ;[i, result] = [0, result + 1]
+                continue
+            }
+            i += 1
+        }
     }
 }
