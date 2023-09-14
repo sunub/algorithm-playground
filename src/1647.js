@@ -32,7 +32,7 @@ var minDeletions = function (s) {
     const [maxFrequency, frequencyMap] = countWordFrequence()
 
     let frequencyCounts = Array.from({ length: maxFrequency }, () => 0)
-    for (const [frequency] of frequencyMap.keys()) {
+    for (const frequency of frequencyMap.keys()) {
         frequencyCounts[frequency - 1] = frequencyMap.get(frequency)
     }
 
@@ -73,5 +73,7 @@ var minDeletions = function (s) {
             }
             i += 1
         }
+
+        return result
     }
 }
