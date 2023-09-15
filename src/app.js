@@ -1,33 +1,23 @@
-/**
- * @param {string[][]} tickets
- * @return {string[]}
- */
-var findItinerary = function (tickets) {
-    const start = "JFK"
-
-    let startPoints = []
-
-    for (let i = 0; i < tickets.length; i++) {
-        if (tickets[i][0] === start) {
-            startPoints.push([tickets[i], i])
-        }
-    }
-    let answer = []
-
-    while (startPoints.length) {
-        let start = startPoints.pop()
-        let startIndex = start[1]
+class UnionFind {
+    constructor(size) {
+        this.group = Array.from({ length: size }, (_, i) => i);
     }
 
-    return answer
+    find(node) {
+        if (this.group[node] !== node) this.find(this.group[node]);
+        return this.group[node];
+    }
 
-    function search(start, next) {}
+    union(node1, node2) {
+        const rootX = this.find(node1);
+        const rootY = this.find(node2);
+
+        if (rootX === rootY) return false;
+    }
 }
 
-console.log(
-    findItinerary([
-        ["JFK", "KUL"],
-        ["JFK", "NRT"],
-        ["NRT", "JFK"],
-    ])
-)
+/**
+ * @param {number[][]} points
+ * @return {number}
+ */
+var minCostConnectPoints = function (points) {};
