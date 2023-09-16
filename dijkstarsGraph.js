@@ -43,3 +43,28 @@ var minimumEffortPath = function (heights) {
     }
     return -1;
 };
+
+let dijkstra = (n, map, s, d) => {
+    let visited = new Array(n).fill(0);
+    let costs = new Array(n).fill(0);
+    costs[s] = 1;
+    while (true) {
+        let node;
+        for (let i = 0; i < visited.length; i++) {
+            if (visited[i]) continue;
+            if (node === undefined) node = i;
+            else node = costs[node] < costs[i] ? i : node;
+        }
+        if (node === undefined) break;
+        if (node === d) return costs[d];
+        visited[node] = 1;
+        if (map[node] === undefined) continue;
+        let adjNodes = Object.keys(map[node]);
+        for (let adj of adjNodes) {
+            if (visited[adj]) continue;
+            let w = map[node][adj] * costs[node];
+            costs[adj] = Math.max(costs[adj], w);
+        }
+    }
+    return costs[d];
+};
