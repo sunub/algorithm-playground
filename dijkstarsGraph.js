@@ -1,5 +1,11 @@
 // 1631. Path With Minimum Effort
 
+const directions = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+];
 /**
  * @param {number[][]} heights
  * @return {number}
@@ -7,41 +13,35 @@
 var minimumEffortPath = function (heights) {
     const rows = heights.length,
         cols = heights[0].length;
-    const dist = Array.from(Array(rows), () => Array(cols).fill(Infinity));
-    const minHeap = [[0, 0, 0]]; // [effort, x, y]
 
-    dist[0][0] = 0;
-    const directions = [
-        [0, 1],
-        [0, -1],
-        [1, 0],
-        [-1, 0],
-    ];
+    const diff = Array.from({ length: rows }, () =>
+        Array.from({ length: cols }, () => Infinity)
+    );
 
-    while (minHeap.length > 0) {
-        const [effort, x, y] = minHeap.shift();
+    diff[0][0] = 0;
+    const queue = [0, 0, diff[0][0]];
+    while (queue.length) {
+        const [x, y, effort] = queue.pop();
 
-        if (effort > dist[x][y]) continue;
-
-        if (x === rows - 1 && y === cols - 1) return effort;
+        if (effort > diff[x][y]) continue;
+        if (x === rows - 1 && y === cols - 1) effort;
 
         for (const [dx, dy] of directions) {
-            const nx = x + dx,
-                ny = y + dy;
+            const nx = dx + x,
+                ny = dy + y;
             if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
                 const newEffort = Math.max(
                     effort,
                     Math.abs(heights[x][y] - heights[nx][ny])
                 );
-                if (newEffort < dist[nx][ny]) {
-                    dist[nx][ny] = newEffort;
-                    minHeap.push([newEffort, nx, ny]);
-                    minHeap.sort((a, b) => a[0] - b[0]);
+
+                if (newEffort < diff[nx][ny]) {
+                    diff[nx][ny] = newEffort;
+                    queue.push([nx, ny, newEffort]);
                 }
             }
         }
     }
-    return -1;
 };
 
 let dijkstra = (n, map, s, d) => {

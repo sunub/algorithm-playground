@@ -1,47 +1,51 @@
+const directions = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+];
 /**
  * @param {number[][]} heights
  * @return {number}
  */
 var minimumEffortPath = function (heights) {
-    const m = heights.length;
-    const n = heights[0].length;
-    const dp = Array.from({ length: m }, () =>
-        Array.from({ length: n }, () => 0)
+    const rows = heights.length,
+        cols = heights[0].length;
+
+    const diff = Array.from({ length: rows }, () =>
+        Array.from({ length: cols }, () => Infinity)
     );
 
-    for (let i = m - 1; i >= 0; i--) {
-        for (let j = n - 1; j >= 0; j--) {
-            let curr = heights[i][j];
+    diff[0][0] = 0;
+    const queue = [[0, 0, diff[0][0]]];
+    while (queue.length > 0) {
+        const curr = queue.pop();
+        const x = curr[0];
+        const y = curr[1];
+        const effort = curr[2];
 
-            if (i === 0 && j === 0) {
-                dp[i][j] = Math.min(dp[i + 1][j], dp[i][j + 1]);
-            } else if (i + 1 < m && j + 1 < n) {
-                dp[i][j] = Math.min(
-                    Math.abs(curr - heights[i + 1][j]),
-                    Math.abs(curr - heights[i][j + 1])
+        if (effort > diff[x][y]) continue;
+        if (x === rows - 1 && y === cols - 1) return effort;
+
+        for (const [dx, dy] of directions) {
+            const nx = dx + x,
+                ny = dy + y;
+            if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
+                const newEffort = Math.max(
+                    effort,
+                    Math.abs(heights[x][y] - heights[nx][ny])
                 );
-            } else if (i + 1 < m) {
-                dp[i][j] = Math.max(
-                    Math.abs(curr - heights[i + 1][j]),
-                    dp[i + 1][j]
-                );
-            } else if (j + 1 < n) {
-                dp[i][j] = Math.max(
-                    Math.abs(curr - heights[i][j + 1]),
-                    dp[i][j + 1]
-                );
+
+                if (newEffort < diff[nx][ny]) {
+                    diff[nx][ny] = newEffort;
+                    queue.push([nx, ny, newEffort]);
+                }
             }
         }
     }
-    console.log(dp);
-
-    return dp[0][0];
 };
-
-console.log(
-    minimumEffortPath([
-        [1, 2, 2],
-        [3, 8, 2],
-        [5, 3, 5],
-    ])
-);
+minimumEffortPath([
+    [1, 2, 2],
+    [3, 8, 2],
+    [5, 3, 5],
+]);
