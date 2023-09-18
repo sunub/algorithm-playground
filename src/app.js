@@ -1,51 +1,41 @@
-const directions = [
-    [0, 1],
-    [0, -1],
-    [1, 0],
-    [-1, 0],
-];
+// 322. Coin Change
+// You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+
+// Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
+
+// You may assume that you have an infinite number of each kind of coin.
+
+// Example 1:
+
+// Input: coins = [1,2,5], amount = 11
+// Output: 3
+// Explanation: 11 = 5 + 5 + 1
+// Example 2:
+
+// Input: coins = [2], amount = 3
+// Output: -1
+// Example 3:
+
+// Input: coins = [1], amount = 0
+// Output: 0
+
 /**
- * @param {number[][]} heights
+ * @param {number[]} coins
+ * @param {number} amount
  * @return {number}
  */
-var minimumEffortPath = function (heights) {
-    const rows = heights.length,
-        cols = heights[0].length;
+var coinChange = function (coins, amount) {
+    const dp = Array.from({ length: amount + 1 }, () => Infinity);
 
-    const diff = Array.from({ length: rows }, () =>
-        Array.from({ length: cols }, () => Infinity)
-    );
-
-    diff[0][0] = 0;
-    const queue = [[0, 0, diff[0][0]]];
-    while (queue.length > 0) {
-        const curr = queue.pop();
-        const x = curr[0];
-        const y = curr[1];
-        const effort = curr[2];
-
-        if (effort > diff[x][y]) continue;
-        if (x === rows - 1 && y === cols - 1) return effort;
-
-        for (const [dx, dy] of directions) {
-            const nx = dx + x,
-                ny = dy + y;
-            if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
-                const newEffort = Math.max(
-                    effort,
-                    Math.abs(heights[x][y] - heights[nx][ny])
-                );
-
-                if (newEffort < diff[nx][ny]) {
-                    diff[nx][ny] = newEffort;
-                    queue.push([nx, ny, newEffort]);
-                }
+    dp[0] = 0;
+    for (let i = 1; i <= amount; i++) {
+        for (let j = 0; j < coins.length; j++) {
+            if (coins[j] <= i) {
+                dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
             }
         }
     }
+    console.log(dp);
 };
-minimumEffortPath([
-    [1, 2, 2],
-    [3, 8, 2],
-    [5, 3, 5],
-]);
+
+console.log(coinChange([1, 2, 5], 11));
