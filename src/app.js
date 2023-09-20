@@ -1,41 +1,17 @@
-// 322. Coin Change
-// You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
-
-// Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
-
-// You may assume that you have an infinite number of each kind of coin.
-
-// Example 1:
-
-// Input: coins = [1,2,5], amount = 11
-// Output: 3
-// Explanation: 11 = 5 + 5 + 1
-// Example 2:
-
-// Input: coins = [2], amount = 3
-// Output: -1
-// Example 3:
-
-// Input: coins = [1], amount = 0
-// Output: 0
-
 /**
- * @param {number[]} coins
- * @param {number} amount
+ * @param {number[]} jobDifficulty
+ * @param {number} d
  * @return {number}
  */
-var coinChange = function (coins, amount) {
-    const dp = Array.from({ length: amount + 1 }, () => Infinity);
+var minDifficulty = function (jobDifficulty, d) {
+    const n = jobDifficulty.length;
+    const dp = Array.from({ length: d + 1 }, () =>
+        Array.from({ length: n }, () => Infinity)
+    );
 
-    dp[0] = 0;
-    for (let i = 1; i <= amount; i++) {
-        for (let j = 0; j < coins.length; j++) {
-            if (coins[j] <= i) {
-                dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
-            }
-        }
+    for (let i = d; i >= 0; i--) {
+        for (let j = n - 1; j >= 0; j--) {}
     }
-    console.log(dp);
 };
 
-console.log(coinChange([1, 2, 5], 11));
+console.log(minDifficulty([6, 5, 4, 3, 2, 1], 2));
