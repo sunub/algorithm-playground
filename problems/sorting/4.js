@@ -37,27 +37,15 @@ var otherSolution = function (nums1, nums2) {
     if ((m + n) % 2 === 0) {
         isEvenNum = true;
     }
+    nums1.push(Infinity);
+    nums2.push(Infinity);
 
     let midNum = 0;
     while (i < mid) {
-        let curr;
-
-        if (nums1[0] != null && nums2[0] != null) {
-            if (nums1[0] <= nums2[0]) {
-                curr = nums1.shift();
-            } else {
-                curr = nums2.shift();
-            }
-        } else {
-            curr = nums1[0] != null ? nums1.shift() : nums2.shift();
-        }
-
-        midNum = curr;
+        midNum = nums1[0] <= nums2[0] ? nums1.shift() : nums2.shift();
         i += 1;
     }
 
-    nums1[0] == null ? nums1.unshift(Infinity) : null;
-    nums2[0] == null ? nums2.unshift(Infinity) : null;
     if (isEvenNum) {
         const answer =
             nums1[0] < nums2[0]
@@ -67,7 +55,5 @@ var otherSolution = function (nums1, nums2) {
         return Number(answer);
     }
 
-    nums1[0] == null ? (nums1[0] = Infinity) : null;
-    nums2[0] == null ? (nums2[0] = Infinity) : null;
     return nums1[0] < nums2[0] ? nums1[0] : nums2[0];
 };
