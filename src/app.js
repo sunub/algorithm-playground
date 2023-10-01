@@ -1,36 +1,18 @@
 /**
- * @param {number[]} nums1
- * @param {number[]} nums2
- * @return {number}
+ * @param {number[]} nums
+ * @return {boolean}
  */
-var findMedianSortedArrays = function (nums1, nums2) {
-    const m = nums1.length,
-        n = nums2.length;
+var find132pattern = function (nums) {
+    let stack = [];
+    let third = Number.MIN_SAFE_INTEGER;
 
-    let i = 0,
-        mid = Math.floor((m + n) / 2),
-        isEvenNum = false;
-    if ((m + n) % 2 === 0) {
-        isEvenNum = true;
+    for (let i = nums.length - 1; i >= 0; i--) {
+        if (nums[i] < third) return true;
+        while (stack.length && stack[stack.length - 1] < nums[i]) {
+            third = stack.pop();
+        }
+        stack.push(nums[i]);
     }
-    nums1.push(Infinity);
-    nums2.push(Infinity);
-
-    let midNum = 0;
-    while (i < mid) {
-        midNum = nums1[0] <= nums2[0] ? nums1.shift() : nums2.shift();
-        i += 1;
-    }
-
-    if (isEvenNum) {
-        const answer =
-            nums1[0] < nums2[0]
-                ? ((midNum + nums1[0]) / 2).toFixed(6)
-                : ((midNum + nums2[0]) / 2).toFixed(6);
-
-        return Number(answer);
-    }
-
-    return nums1[0] < nums2[0] ? nums1[0] : nums2[0];
+    return false;
 };
-console.log(findMedianSortedArrays([], [3, 4]));
+console.log(find132pattern([-2, 1, 2, -2, 1, 2]));
