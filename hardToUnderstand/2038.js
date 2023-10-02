@@ -26,7 +26,7 @@
  * @param {string} colors
  * @return {boolean}
  */
-var winnerOfGame = function (colors) {
+var mySolution = function (colors) {
     if (colors.length <= 2) return false;
 
     const map = new Map();
@@ -87,3 +87,25 @@ function runningGame(currNum) {
     }
     return -1;
 }
+
+// 문제를 너무 있는 그래도 풀려고 했다. 간단하게 생각하여서 어떻게 문제를 해결할 것인지 생각 했어야 했다. 이 경우 alice와 bob은 각각의 독립적인 사건을 지니고 있기 때문에 하나의 동작이 다른 동작에 영향을 주지 않는것이 보장된다. 이러한 성질을 이용하여 같은 문자가 반복되는 경우에는 같은 동작이 계속해서 이루어지므로 alice가 게임을 수행하는 횟수와 bob이 게임을 수행하는 횟수를 한번의 반복으로 계산할 수 있고 이 두 수의 차이를 통해서 게임의 결과를 알아낼 수 있다.
+
+/**
+ * @param {string} colors
+ * @return {boolean}
+ */
+var winnerOfGame = function (colors) {
+    let [alice, bob] = [0, 0];
+
+    for (let i = 1; i < colors.length - 1; i++) {
+        if (colors[i - 1] === colors[i] && colors[i] === colors[i + 1]) {
+            if (colors[i] === "A") {
+                alice += 1;
+            } else {
+                bob += 1;
+            }
+        }
+    }
+
+    return alice - bob >= 1;
+};
