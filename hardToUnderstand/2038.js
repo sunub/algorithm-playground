@@ -37,6 +37,9 @@ var winnerOfGame = function (colors) {
             : map.set(colors[i], [i]);
     }
 
+    if (!map.has("A")) return false;
+    if (!map.has("B")) return true;
+
     let answer = true;
     let aNum = [...map.get("A")];
     let bNum = [...map.get("B")];
@@ -84,5 +87,3 @@ function runningGame(currNum) {
     }
     return -1;
 }
-
-console.log(winnerOfGame("BBBAAAABB"));
