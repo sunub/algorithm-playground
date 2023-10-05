@@ -26,16 +26,16 @@ var majorityElement = function (nums) {
     let candiate1 = null;
     let candiate2 = null;
 
-    for (const num of nums) {
-        if (candiate1 != null && candiate1 === num) {
+    for (const n of nums) {
+        if (candiate1 != null && candiate1 === n) {
             count1 += 1;
-        } else if (candiate2 != null && candiate2 === num) {
+        } else if (candiate2 != null && candiate2 === n) {
             count2 += 1;
-        } else if (count1 === 0) {
-            candiate1 = num;
+        } else if (candiate1 == null) {
+            candiate1 = n;
             count1 += 1;
-        } else if (count2 === 0) {
-            candiate2 = num;
+        } else if (candiate2 == null) {
+            candiate2 = n;
             count2 += 1;
         } else {
             count1 -= 1;
@@ -43,17 +43,42 @@ var majorityElement = function (nums) {
         }
     }
 
-    const result = [];
+    count1 = 0;
+    count2 = 0;
 
-    [count1, count2] = [0, 0];
-    for (const num of nums) {
-        if (candiate1 != null && num === candiate1) count1 += 1;
-        if (candiate2 != null && num === candiate2) count2 += 1;
+    for (const n of nums) {
+        if (candiate1 === n) count1 += 1;
+        if (candiate2 === n) count2 += 1;
     }
 
     const n = nums.length;
+    const result = [];
     if (count1 > Math.floor(n / 3)) result.push(candiate1);
-    if (count2 > Math.floor(n / 3)) result.push(candiate2);
+    if (count2 > Math.floor(n / 2)) result.push(candiate2);
 
     return result;
+};
+
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var mySolution = function (nums) {
+    const m = nums.length;
+    const map = new Map();
+    const maxTimes = Math.floor(m / 3);
+
+    for (let i = 0; i < m; i++) {
+        map.has(nums[i])
+            ? map.set(nums[i], map.get(nums[i]) + 1)
+            : map.set(nums[i], 1);
+    }
+
+    const answer = [];
+    for (const [num, count] of map.entries()) {
+        if (count > maxTimes) {
+            answer.push(num);
+        }
+    }
+    return answer;
 };
