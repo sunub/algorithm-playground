@@ -1,0 +1,32 @@
+```javascript
+function solution(id_list, report, k) {
+    var answer = [];
+    const map = new Map();
+    const count = new Map();
+    report = report.map((v) => v.split(' '));
+    
+    for(const [from, to] of report) {
+        const visit = map.get(from) ?? [];
+        if(!visit.includes(to)) {
+            map.has(from) 
+                ? map.set(from, [...map.get(from), to])
+                : map.set(from, [to]);
+            count.has(to) ? count.set(to, count.get(to) + 1) : count.set(to, 1);
+        }
+    }
+
+    id_list.forEach(id => {
+        let reportTimes = 0
+        if(map.has(id)) {
+            for(const names of map.get(id)) {
+                count.get(names) && count.get(names) >= k
+                    ? reportTimes += 1
+                    : null;
+            }
+        }
+        answer.push(reportTimes);
+    })
+    
+    return answer;
+}
+```
