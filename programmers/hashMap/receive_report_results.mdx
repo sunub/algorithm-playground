@@ -30,3 +30,25 @@ function solution(id_list, report, k) {
     return answer;
 }
 ```
+
+
+```javascript
+function solution(tangerine, k) {
+    const map = new Map();
+    for(let i = 0; i < tangerine.length; i += 1) {
+        map.set(tangerine[i], (map.get(tangerine[i]) ?? 0) + 1);
+    }
+
+    const sorted = [...map.entries()].sort((a, b) => b[1] - a[1]);
+
+    let [sum, answer] = [0, 0];
+    for(const [type, count] of sorted) {
+        if(sum <= k) {
+            sum += count;
+            answer += 1;
+        }
+    }
+    console.log(answer);
+    return answer;
+}
+```
