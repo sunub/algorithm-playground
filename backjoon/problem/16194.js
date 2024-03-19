@@ -1,12 +1,10 @@
 const fs = require("fs");
-const path = require("path");
+const input = fs.readFileSync("/dev/stdin").toString().trim().split("\n");
 
-const dir = process.cwd();
-const inputPath = path.join(dir, "/backjoon/example.txt");
-const input = fs.readFileSync(inputPath).toString().trim().split("\n");
 const N = Number(input[0]);
 const M = input[1].split(" ").map(Number);
-console.log(solution(N, M));
+
+solution(N, M);
 
 function solution(N, M) {
     const dp = new Array(N + 1).fill(Infinity);
@@ -20,5 +18,5 @@ function solution(N, M) {
         }
     }
 
-    return dp[N];
+    console.log(dp[N]);
 }
