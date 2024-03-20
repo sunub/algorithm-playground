@@ -1,34 +1,33 @@
-const fs = require("fs");
-const input = fs.readFileSync("/dev/stdin").toString().trim().split("\n");
-const numbers = input.slice(0, 9).map(Number);
+const fs = require('fs');
+const path = require('path');
 
-/**
- *
- * @param {number[]} numbers
- */
-function solution(numbers) {
-    const result = [];
-    const sum = numbers.reduce((acc, cur) => acc + cur, 0);
-    const sortedNumbers = numbers.sort((a, b) => a - b);
-    let i = 0;
-    let j = 1;
-    while (i < 8 && j < 9) {
-        const currentSum = sum - sortedNumbers[i] - sortedNumbers[j];
-        if (currentSum === 100) {
-            for (let k = 0; k < 9; k++) {
-                if (k !== i && k !== j) {
-                    result.push(sortedNumbers[k]);
-                }
-            }
-            return result;
-        } else if (currentSum < 100) {
-            j++;
-        } else {
-            i++;
-            j = i + 1;
-        }
+const submitPath = '/dev/stdin';
+const localPath = path.join(process.cwd(), '/baekjoon/example.txt');
+
+const input = fs.readFileSync(localPath).toString().split('\n');
+
+const numbers = input.map(Number).sort((a, b) => a - b);
+
+let answer;
+function backtracking(start, curr, sum) {
+    if (sum > 100 || curr.length > 7) {
+        return;
     }
-    return result;
+
+    if (sum === 100 && curr.length === 7) {
+        answer = [...curr];
+        return;
+    }
+
+    for (let i = start; i < numbers.length; i++) {
+        curr.push(numbers[i]);
+        sum += numbers[i];
+        backtracking(i + 1, curr, sum);
+        curr.pop();
+        sum -= numbers[i];
+    }
 }
 
-solution(numbers).forEach((n) => console.log(n));
+backtracking(0, [], 0);
+
+answer.forEach((num) => console.log(num));
