@@ -8,7 +8,7 @@
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "name": "jsDebug",
-            "program": "${workspaceFolder}/src/app.js",
+            "program": "${file}",
             "request": "launch",
             "restart": true,
             "runtimeExecutable": "nodemon",
@@ -19,7 +19,7 @@
             "type": "node",
             "request": "launch",
             "name": "ts-debug",
-            "program": "${workspaceFolder}/src/app.ts",
+            "program": "${file}",
             "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": ["${workspaceFolder}/dist/**/*.js"]
         },
