@@ -9,95 +9,108 @@ function solution(edges) {
         graph.has(u) ? graph.set(u, [...graph.get(u), v]) : graph.set(u, [v]);
     }
 
-    const findRoot = () => {
-        const result = [];
-        for (const [u, vertices] of [...graph.entries()]) {
-            if (vertices.length > 1) {
-                result.push(u);
-            }
-        }
-
-        for (const root of result) {
-            const isLoop = findLoop(root, new Set(), root);
-            if (!isLoop) {
-                return root;
-            }
-        }
-
-        function findLoop(u, visit, root) {
-            visit.add(u);
-
-            if (!graph.has(u)) return false;
-
-            for (const v of [...graph.get(u)]) {
-                if (visit.has(v) && v === root) {
-                    return true;
-                }
-
-                if (!visit.has(v)) {
-                    return findLoop(v, visit, root);
-                }
-            }
-
-            return false;
-        }
-    };
-
-    const root = findRoot();
-
-    for (const branch of graph.get(root)) {
-        const donut = isDonut(branch);
-    }
-
-    function isDonut(root) {
+    function countNodeAndLines(root, visit) {
+        if(!graph.get(root)) {
+            visit.add(root);
+            return [new Set([root]), new Set()]};
         let queue = [root];
-        const visit = new Set();
-
-        let line = 0;
-        let node = 0;
+        const node = new Set();
+        const line = new Set();
+        let isFirst = true;
         while (queue.length) {
             const curr = queue.shift();
+            
+            if (node.has(curr) && curr === root) continue;
+            if(isFirst) { isFirst = false }
+            else {
+                visit.add(curr);
+                node.add(curr)};
 
-            if (visit.has(curr) && curr === root) continue;
-            node += 1;
-            visit.add(curr);
 
             if (graph.has(curr)) {
                 for (const v of [...graph.get(curr)]) {
-                    line += 1;
-                    queue.unshift(v);
+                    const lineName = `${curr},${v}`;
+                    line.add(lineName);
+                     if(!node.has(v)) {
+                        queue.unshift(v);
+                    }
                 }
             }
         }
+        return [node, line];
+    }
 
-        console.log(line, node);
-        if (line === node) return true;
+    function isDonut(node, line) {
+        let size = 1;
+        while(size <= node.size) {
+            let expectedNode = size;
+            let expectedLine = size;
+            if(expectedNode === node.size && expectedLine === line.size) {
+                return true;
+            }
+            size += 1; 
+        }
         return false;
     }
 
-    function isStick(root) {}
-}
-
-function dfs(graph, u, visit, root) {
-    visit.add(v);
-
-    if (!graph.has(v)) return visit;
-
-    for (const [v] of graph.get(u)) {
-        if (visit.has(v) && v === root) {
-            return false;
+    function isStick(node, line) {
+        let size = 1;
+        while(size <= node.size) {
+            let expectedNode = size;
+            let expectedLine = size - 1;
+            if(expectedNode === node.size && expectedLine === line.size) {
+                return true;
+            }
+            size += 1; 
         }
+        return false;
+    }
+    
+    function isEightShapeGraph(node, line) {
+        let size = 1;
+        while(size <= node.size) {
+            let expectedNode = 2 * size + 1;
+            let expectedLine = 2 * size + 2;
+            if(expectedNode === node.size && expectedLine === line.size) {
+                return true;
+            }
+            size += 1; 
+        }
+        return false;
+    }
 
-        if (!visit.has(v)) {
-            dfs(graph, v, visit);
+    const findRoot = () => {
+        const [node, line] = countNodeAndLines(branch);
+
+    };
+
+
+    // const root = findRoot();
+
+    const answer = Array.from({ length: 4}, () => 0);
+    // answer[0] = root;
+
+    const visit = new Set();
+    const allNodes = new Set();
+    for(const [root, branches] of [...graph.entries()]) {
+        allNodes.add(root);
+        for(const branch of branches) {
+            allNodes.add(branch);
+            if(visit.has(branch)) continue;
+            const [node, line] = countNodeAndLines(branch, visit);
+            const donut = isDonut(node, line);
+            const stick = isStick(node, line);
+            const eightShapeGraph = isEightShapeGraph(node, line);
+            
+            answer[1] += donut ? 1 : 0
+            answer[2] += stick ? 1 : 0
+            answer[3] += eightShapeGraph ? 1 : 0
         }
     }
 
-    return visit;
+    const root = [...allNodes.values()].find((node) => !visit.has(node))
+    answer[0] = root;
+    return answer;
 }
-solution([
-    [2, 3],
-    [4, 3],
-    [1, 1],
-    [2, 1],
-]);
+
+solution([[4, 11], [1, 12], [8, 3], [12, 7], [4, 2], [7, 11], [4, 8], [9, 6], [10, 11], [6, 10], [3, 5], [11, 1], [5, 3], [11, 9], [3, 8]]);
